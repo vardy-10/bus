@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>北航校车管理系统</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/bus/busRefundTicketShow.js"></script>
+<script src="../../js/common.js"></script>
+<script type="text/javascript "
+	src="../../static/js/jquery-1.9.1.min.js"></script>
+<style type="text/css">
+.layui-btn-container div {
+	float: left;
+}
+.layui-block{
+margin: 10px 10px 0px 20px;
+}
+.layui-inline {
+	margin: 10px 10px 0px 20px;
+}
+.layui-form-label{
+width: 150px!important;
+}
+#btn {
+	margin: 10px 0px 0px 20px;
+}
+.layui-form-pane .layui-form-checkbox {
+	margin: 4px 10px 4px 10px;
+}
+ /*不显示秒*/
+            .layui-laydate-content>.layui-laydate-list {
+                padding-bottom: 0px;
+                overflow: hidden;
+            }
+            .layui-laydate-content>.layui-laydate-list>li{
+                width:50%
+            }
+ 
+            .merge-box .scrollbox .merge-list {
+                padding-bottom: 5px;
+            }
+           /*设置时间框  */
+          
+           .layui-input-inline>input{
+           width:200px!important;
+           }
+            #time2,#time3{
+            width: 90px!important;
+           }
+</style>
+
+</head>
+<body>
+	<fieldset class="layui-elem-field layui-field-title"
+		style="margin-top: 20px;">
+		<legend>订单退票管理</legend>
+	</fieldset>
+	<input id="temp" type="hidden">
+	<form class="layui-form layui-form-pane">
+		<div class="layui-form" id="searchForm">
+				<div class="layui-block">
+				<label class="layui-form-label">日期</label>
+				<div class="layui-input-inline">
+					<input type="text" name="shifts_date" readonly="readonly"
+				   placeholder=""  autocomplete="off" class="layui-input" id="test1" th:value='${#strings.escapeXml(nowDate)}'>
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">发车时间</label>
+				<div class="layui-input-inline">
+				<input type="text" class="layui-input" id="time2" placeholder=""
+					name="time" autocomplete="off">
+			</div>
+                  至
+					<div class="layui-input-inline">
+				<input type="text" class="layui-input" id="time3" placeholder=""
+					name="time" autocomplete="off" >
+			</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">乘客ID</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="passenger_id" placeholder="根据乘客ID查询"
+						name="passenger_id">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">班次</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="shifts_number" placeholder="根据线路查询"
+						name="shifts_number">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">线路</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="line_name" placeholder="根据线路查询"
+						name="line_name">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">始发站</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="up_origin_name" placeholder="根据始发站查询"
+						name="startTime">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">乘客类型</label>
+				<div class="layui-input-inline" style="width: 200px;">
+					<select name="passenger_type" lay-filter="aihao" 
+						id="passenger_type">
+						<option value="">请选择</option>
+						<option value="1">教工</option>
+						<option value="2">学生</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="layui-inline">
+				<label class="layui-form-label">订单编号</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="order_id" placeholder="根据订单编号查询"
+						name="order_id">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">支付单</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="order_sn" placeholder="根据支付单查询"
+						name="order_sn">
+				</div>
+			</div>
+			<button class="layui-btn" lay-submit lay-filter="searchBtn" id="btn">
+				<i class="layui-icon layui-icon-search"></i>
+			</button>
+		</div>
+	</form>
+	<table class="layui-hide" id="test" lay-filter="test"></table>
+
+	<script type="text/html" id="barDemo">
+		<a class="layui-btn  layui-btn-xs" lay-event="yes">确定退票</a>
+		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="no">取消退票</a>
+	</script>
+
+
+</body>
+</html>

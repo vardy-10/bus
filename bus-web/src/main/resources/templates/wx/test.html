@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+    <meta name="viewport" content="initial-scale=1, user-scalable=0, minimal-ui" charset="UTF-8">
+    <title>未出行订单</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-text-size-adjust: none;
+        }
+
+        html {
+            font-size: 10px;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            font-size: 1.2em;
+        }
+
+        .outer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            -webkit-box-orient: vertical;
+            box-orient: vertical;
+            -webkit-flex-direction: column;
+            flex-direction: column;
+        }
+
+        .header {
+            position: relative;
+            height: 44px;
+            line-height: 44px;
+            border-bottom: 1px solid #ccc;
+            background-color: #eee;
+        }
+
+        .header h1 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: normal;
+        }
+
+        .inner {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            background-color: #fff;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .inner .item {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: block;
+            -ms-flex-align: center;
+            -webkit-box-align: center;
+            box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            padding: 3.125%;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .inner .item img {
+            display: block;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+        }
+
+        .inner .item .dir {
+
+            display: block;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            width: 100%;
+            max-height: 40px;
+            overflow: hidden;
+            line-height: 40px;
+            font-size: 1.4rem;
+        }
+        .inner .item .dir div{
+            font-weight: bolder;
+
+            float: left;
+        }
+        .inner .item .date {
+            display: block;
+            height: 20px;
+            line-height: 20px;
+            color: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.1);
+
+        }
+        .inner .item .date div{
+           width: 50%;
+            float: left;
+        }
+        .opacity {
+            -webkit-animation: opacity 0.3s linear;
+            animation: opacity 0.3s linear;
+        }
+
+        @-webkit-keyframes opacity {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes opacity {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="../../static/css/dropload.css">
+</head>
+<body>
+<div class="outer">
+    <div class="header">
+        <h1>未出行订单</h1>
+        <div class="footer" style="position:absolute;left:0;top:0;background-color:#fff;">
+            <a href=""></a>
+            <a href="#"></a>
+        </div>
+    </div>
+    <div class="inner">
+        <div class="lists">
+
+        </div>
+    </div>
+</div>
+<!-- jQuery1.7以上 或者 Zepto 二选一，不要同时都引用 -->
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/dropload.min.js"></script>
+<script>
+    $(function () {
+        var  size=0;
+        //默认加载
+        function start(){
+            $(".dropload-refresh").html('暂无数据');
+            $.ajax({
+                type: 'GET',
+                url: 'WaitingOrder?page=1&time=' + new Date().getTime() + '&status=1',
+                dataType: 'json',
+                async:false,
+                success: function (data) {
+                    console.log(data);
+                    var result = '';
+                    if(data.data.length>0){
+                        size=data.data.length;
+                        for (var i = 0; i < data.data.length; i++) {
+                            result += ' <a class="item opacity" href="#">\n' +
+                                '                                <div class="dir"><div style="width: 60%"><span>北京</span>——<span>上海</span></div><div style="width: 40%">05:00</div></div>\n' +
+                                '                            <div class="date"><div>乘车人: <span>zah</span></div><div>学工ID: <span>132323</span></div></div>\n' +
+                                '                            <div class="date"><div>师/生: <span>师</span></div><div>票价: <span>13</span></div></div>\n' +
+                                '                            <div class="date"><div>日期: <span>2020-2-2</span></div><div>车次: <span>北1</span></div></div>\n' +
+                                '                            </a>';
+
+                        }
+                        $('.lists').html(result);
+                        if(data.data.length<10&&data.data.length>0){
+
+                            $(".dropload-refresh").html('');
+
+                        }
+
+                    }
+
+                }});
+        }
+
+
+        var page=1;//页数
+            // dropload
+            var dropload = $('.inner').dropload({
+                domUp: {
+                    domClass: 'dropload-up',
+                    domRefresh: '<div class="dropload-refresh">↓下拉刷新</div>',
+                    domUpdate: '<div class="dropload-update">↑释放更新</div>',
+                    domLoad: '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
+                },
+                domDown: {
+                    domClass: 'dropload-down',
+                    domLoad: '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
+                    domNoData: '<div class="dropload-noData">暂无数据</div>'
+                },
+                autoLoad:false,
+                loadUpFn: function (me) {
+                    console.log(me);
+
+
+
+                    console.log("shang");
+                   page=1;
+                    $.ajax({
+                        type: 'GET',
+                        url: 'WaitingOrder?page=1&time=' + new Date().getTime() + '&status=1',
+                        dataType: 'json',
+                        async:false,
+                        success: function (data) {
+                            /* var result = '';
+                             for(var i = 0; i < data.lists.length; i++){
+                                 result +=   '<a class="item opacity" href="'+data.lists[i].link+'">'
+                                     +'<img src="'+data.lists[i].pic+'" alt="">'
+                                     +'<h3>'+data.lists[i].title+'</h3>'
+                                     +'<span class="date">'+data.lists[i].date+'</span>'
+                                     +'</a>';
+                             }*/
+                            var result = '';
+                            size=data.data.length;
+                            if(data.data.length>0){
+
+                                for (var i = 0; i < data.data.length; i++) {
+                                    result += ' <a class="item opacity" href="#">\n' +
+                                        '                                <div class="dir"><div style="width: 60%"><span>北京</span>——<span>上海</span></div><div style="width: 40%">05:00</div></div>\n' +
+                                        '                            <div class="date"><div>乘车人: <span>zah</span></div><div>学工ID: <span>132323</span></div></div>\n' +
+                                        '                            <div class="date"><div>师/生: <span>师</span></div><div>票价: <span>13</span></div></div>\n' +
+                                        '                            <div class="date"><div>日期: <span>2020-2-2</span></div><div>车次: <span>北1</span></div></div>\n' +
+                                        '                            </a>';
+                                }
+                            }else{
+                                 /* me.lock('up');// 锁定*/
+                                  $(".dropload-refresh").html('暂无数据');
+                            }
+                            console.log(data.data);
+                            // 为了测试，延迟1秒加载
+                            setTimeout(function () {
+                                $('.lists').html(result);
+                                // 每次数据加载完，必须重置
+                                dropload.resetload();
+                                if(me.isLockDown){
+
+                                    me.noData(false);
+                                    me.unlock();
+                                }
+                            }, 3000);
+                        },
+                        error: function (xhr, type) {
+                            alert('x error!');
+                            // 即使加载出错，也得重置
+                            dropload.resetload();
+                        }
+                    });
+                },
+                loadDownFn: function (me) {
+                    if(size<10){
+                        dropload.resetload();
+                        $(".dropload-refresh").html('');
+                        return false;
+                    }
+                   console.log(me);
+                    page++;
+                    console.log("xia"+page);
+                    $.ajax({
+                        type: 'GET',
+                        url: 'WaitingOrder?page='+page+'&time=' + new Date().getTime() + '&status=1',
+                        dataType: 'json',
+                        async:false,
+                        success: function (data) {
+                            console.log(data);
+                            var result = '';
+                            size=data.data.length;
+                            if(data.data.length>0){
+                                for (var i = 0; i < data.data.length; i++) {
+                                    result += ' <a class="item opacity" href="#">\n' +
+                                        '                                <div class="dir"><div style="width: 60%"><span>北京</span>——<span>上海</span></div><div style="width: 40%">05:00</div></div>\n' +
+                                        '                            <div class="date"><div>乘车人: <span>zah</span></div><div>学工ID: <span>132323</span></div></div>\n' +
+                                        '                            <div class="date"><div>师/生: <span>师</span></div><div>票价: <span>13</span></div></div>\n' +
+                                        '                            <div class="date"><div>日期: <span>2020-2-2</span></div><div>车次: <span>北1</span></div></div>\n' +
+                                        '                            </a>';
+                                }
+
+                            }else{
+                                me.lock('down');// 锁定
+                                me.noData();// 无数据
+                            }
+                            console.log(me);
+                            // 为了测试，延迟1秒加载
+                            setTimeout(function () {
+                                $('.lists').append(result);
+                                // 每次数据加载完，必须重置
+                                dropload.resetload();
+                                if(data.data.length<10&&data.data.length>0){
+
+                                    $(".dropload-refresh").html('');
+                                }
+                            }, 3000);
+                        },
+                        error: function (xhr, type) {
+                            alert('s error!');
+                            // 即使加载出错，也得重置
+                            dropload.resetload();
+                        }
+                    });
+                }
+            });
+      start();
+        }
+
+    );
+</script>
+</body>
+</html>

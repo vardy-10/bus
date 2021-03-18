@@ -1,0 +1,439 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>我要购票</title>
+		<script src="../../static/js/jquery-1.9.1.min.js"></script>
+		<script src="../../static/js/common.js"></script>
+		<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+		<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+		<script src="../../layui/layui.js"></script>
+		<style>
+			*{
+		  margin: 0px;
+		  padding: 0px;
+	  }
+	  #busList div{
+		  display: inline-block;
+		 
+	  }
+	  .list_row{
+     width: 100%;
+	 height: 100%;
+	  }
+	 .time{
+		 color: #22AADD;
+	 }
+	.ui-grid-b{
+		font-size:0.7rem;
+	}
+	.ui-grid-b>.ui-block-c div{
+		text-align: center;
+		height: 60px;
+		line-height: 60px;
+	}
+	.ui-grid-b>.ui-block-c{
+		height: 60px;
+		width: 20%!important;
+	}
+	.ui-grid-b>.ui-block-b{
+		height: 60px;
+		width: 75%!important;
+	}
+	.ui-grid-b>.ui-block-d{
+		height: 60px;
+		width: 5%!important;
+	}
+	.ui-grid-b>.ui-block-b .inner{
+			
+	}
+	
+    .ui-grid-b>.ui-block-b .inner>div{
+	
+		height: 60px;
+		
+		float: left;
+		position: relative;
+	}
+	.ui-grid-b>.ui-block-b .inner .start{
+				width: 40%; 
+	}
+	.ui-grid-b>.ui-block-b .inner .end{
+		   position: relative;
+			 	width: 40%;
+	}
+	.ui-grid-b>.ui-block-b .inner .dir{
+		position: relative;
+			 	width: 20%;
+	}
+	 .ui-grid-b>.ui-block-b .inner img{
+		 width: 60%;
+	 }
+	.ui-grid-b>.ui-block-b .inner .start>div{
+      position: absolute;
+	  
+	}
+	   .ui-grid-b>.ui-block-b .inner .start .icon {
+		   left: 10%;
+		   top: 20%;
+	   }
+	   .ui-grid-b>.ui-block-b .inner .start .startPlace {
+		   overflow: hidden;
+		        width: 70%;
+				height:0.75rem;
+				line-height: 0.75rem;
+				font-size: 0.75rem;
+	   		  left: 25%;
+	   		   top: 20%;
+	   		  
+	   }
+	   .ui-grid-b>.ui-block-b .inner .start .time {
+	   		  left: 10%;
+	   		  top: 60%;
+	   }
+	   .ui-grid-b>.ui-block-b .inner .end>div{
+	     position: absolute;
+	     
+	   }
+	      .ui-grid-b>.ui-block-b .inner .end .icon {
+	   	   left: 10%;
+	   	   top: 20%;
+	      }
+	      .ui-grid-b>.ui-block-b .inner .end .startPlace {
+			  overflow: hidden;
+			  width: 70%;
+			  height:0.75rem;
+			  line-height: 0.75rem;
+			  font-size: 0.75rem;
+	      	  left: 25%;
+	      	  top: 20%;		  
+	      }
+	      .ui-grid-b>.ui-block-b .inner .end .time {
+	      		  left: 10%;
+	      		  top: 60%;
+	      }
+		  /* */
+		  .ui-grid-b>.ui-block-b .inner .dir>div{
+		    position: absolute;
+		    
+		  }
+		  .ui-grid-b>.ui-block-b .inner .dir .time{
+			 top: 50%;
+		  }
+		   .ui-grid-b>.ui-block-b .inner .dir .arrow{
+		   			 top: 20%;
+		   }
+		   /*方向箭头 */
+		  /*方向箭头 */
+#arrow {
+	position: relative;
+	height: 12px;
+	top: 30%;
+}
+
+#arrow #arrowSecond {
+	border-style: solid;
+	border-width: 4px 4px 4px 4px;
+	border-color: transparent transparent #22AADD #22AADD;
+	width: 0px;
+	height: 0px;
+	position: absolute;
+	left: 88%;
+}
+
+#arrow #arrowFirst {
+	background: #22AADD;
+	border-width: 1.1px;
+	border-style: solid;
+	width: 90%;
+	border-color: #22AADD;
+	position: absolute;
+	top: 49%;
+}
+		/* 中间时间 */
+		   .ui-grid-b>.ui-block-b .inner .dir .time{
+			   width: 100%;
+			     font-size: 0.6rem;
+				 /* font-size: 10vw; */
+				 color: #AAAAAA;
+				 position: absolute;
+				 top: 50%;	
+				 text-align: center;	
+		   }
+		   /* 右边向下小箭头*/
+		   .ui-block-d{
+			   position: relative;
+			   text-align: center;
+		   }
+		   .arrow-left {
+			   position: absolute;
+			   top: 50%;
+		   font-size: 0;
+		   line-height: 0;
+		   border-width: 7px;
+		   border-color: rgba(0,0,0,0.3);
+		   border-left-width: 0;
+		   border-style: dashed;
+		   border-right-style: solid;
+		   border-top-color: transparent;
+		   border-bottom-color: transparent;
+		   }
+		   .arrow-bottom {
+		  position: absolute;
+		  top: 50%;
+		   font-size: 0;
+		   line-height: 0;
+		   border-width:7px;
+		   border-color: rgba(0,0,0,0.3);
+		   border-bottom-width: 0;
+		   border-style: dashed;
+		   border-top-style: solid;
+		   border-left-color: transparent;
+		   border-right-color: transparent;
+          
+		   }
+		   /* 前一天后一天当前日期*/
+		   .beforeDay,.nextDay{
+			   width: 35%;
+			   height: 40px;
+			   float: left;
+			   background-color:#22AADD;
+			   border-radius: 4px 0px 0px 4px;
+			   color: white;
+		   }
+		   .nowDate{
+			    width: 29%;
+				height: 40px;
+				float: left;
+				font-size: 0.8rem;
+			}
+			.shiftsInfo{
+				margin-bottom: 3px;
+			}
+			/* 显示车票信息 */
+			.teacherTicket{
+				margin-left: 10%;
+				width: 40%;
+				display: inline-block;
+				font-size: 0.8rem;
+			text-align: left;
+			}
+			.studentTicket{
+				margin-right: 10%;
+				width: 40%;
+				display: inline-block;
+				font-size: 0.8rem;
+			text-align: right;	
+			}
+			.attention{
+				font-size: 0.8rem;
+				margin-left: 10%;
+				margin-top:5px;
+				margin-bottom:5px;
+				width: 80%;
+			}
+			/* 订票按钮 */
+			.order{
+				position: absolute;
+				right:5%;
+				top: 45%;
+				width: 20px;
+				height: 20px;
+				line-height: 20px;
+				text-align: center;
+				background-color: #22AADD;
+				color: white;
+				}
+				.ui-content {
+				padding:0px!important;
+}
+
+form {
+	padding: 1em;
+}
+
+label {
+	font-weight: bolder !important;
+}
+
+  </style>
+	</head>
+
+	<body>
+		<div data-role="page">
+			<div data-role="content">
+				<form method="post" action="">
+					<input type="hidden" name="originName" id="originName"> <input type="hidden" name="terminalName" id="terminalName">
+					<input type="hidden" name="shiftsDate" id="shiftsDate">
+					<div class="ui-field-contain">
+						<label for="up_origin_name">出发地</label> <select name="up_origin_name" id="up_origin_name" data-icon="carat-r">
+							<option value="">请选择</option>
+							<option th:each="searchOriginName:${searchOriginName}" th:value="${searchOriginName['up_origin_name']}" th:text="${searchOriginName['up_origin_name']}"></option>
+						</select>
+					</div>
+					<div class="ui-field-contain">
+						<label for="up_terminal_name">目的地</label> <select name="up_terminal_name" id="up_terminal_name" data-icon="carat-r">
+							<option value="">请选择</option>
+							<option th:each="searchTerminalName:${searchTerminalName}" th:value="${searchTerminalName['up_terminal_name']}"
+							 th:text="${searchTerminalName['up_terminal_name']}"></option>
+						</select>
+					</div>
+					<div class="ui-field-contain">
+						<label for="tx1">出发时间</label> <input type="date" name="shifts_date" id="shifts_date" data-icon="carat-r" th:value=${nowDate}>
+					</div>
+				</form>
+				<div style="height: 40px;width:100%;line-height: 40px;text-align: center;"  id="centerPart">
+				    <div style=" width: 32%;height: 40px;display: inline-block;border: 1px solid #828282;background-color: #828282;border-radius: 4px 0px 0px 4px;color: white;">
+				   全部</div><div style=" width: 32%;height: 40px;display: inline-block;border: 1px solid #828282;">
+								上午班次
+								 			 
+								 </div><div style=" width: 32%;height: 40px;display: inline-block;border: 1px solid #828282;border-radius: 0px 4px 4px 0px;">
+								下午班次
+								 			 
+								 </div>
+				  </div>
+				<a href="#" data-role="button"  style="background-color:#22AADD;color: white;text-shadow: 0 0 0 white;" class="btnSearch">查询</a>
+					<!--显示数据  -->
+					<div>
+						<!--  -->
+						<div>
+<div  class="ui-grid-b shiftsInfo" style="border-bottom: 2px dotted gainsboro;">
+						<div class="ui-block-c">
+							<div style="font-weight:bolder;"><span>车次</span>
+								<span >北a</span></div>
+						</div>
+						<div class="ui-block-b"">
+						<div class=" inner">	
+							<div class="start">
+								<div class="icon"><img src="../../static/images/2.png"></div>
+								<div class="startPlace">北航校区航a校试试</div>
+								<div class="time">11:00</div>
+							</div>
+							<div class="dir">
+								<div id="arrow">
+									<div id="arrowFirst"></div>
+									<div id="arrowSecond"></div>
+								</div>
+								<div class="time">159分钟</div>
+								
+							</div>
+							<div class="end">
+								<div class="icon"><img src="../../static/images/3.png"></div>
+								<div class="startPlace">北航校区航校试试啥事的撒打算多</div>
+								<div class="time">12:00</div>
+								<div class="order">订</div>
+							</div>
+						</div>
+					</div>
+					<div class="ui-block-d">
+						<div class="arrow-bottom"></div>
+					</div>
+				</div>
+				<!--显示票信息 -->
+				<div class="ticketInfo">
+					<div><div class="teacherTicket">教工票：<span>10/15张</span></div><div class="studentTicket">学生票：<span >5/35张</span></div></div>
+					<div class="attention">注：教工票预留发车前15分钟</div>
+				</div>
+				</div>
+				<!--  -->
+				<div style="height:4px;background-color:rgba(0,0,0,0.1);"></div>
+				<!--  -->
+              
+					
+
+			</div>
+			<div class="copyShifts" style="display: none;">
+				<div>
+					<div class="ui-grid-b shiftsInfo"
+						style="border-bottom: 2px dotted gainsboro;">
+						<div class="ui-block-c">
+							<div style="font-weight: bolder;">
+								<span>车次</span> <span>北a</span>
+							</div>
+						</div>
+						<div class="ui-block-b"">
+							<div class=" inner">
+								<div class="start">
+									<div class="icon">
+										<img src="../../static/images/2.png">
+									</div>
+									<div class="startPlace">北航校区航a校试试</div>
+									<div class="time">11:00</div>
+								</div>
+								<div class="dir">
+									<div id="arrow">
+										<div id="arrowFirst"></div>
+										<div id="arrowSecond"></div>
+									</div>
+									<div class="time">159分钟</div>
+
+								</div>
+								<div class="end">
+									<div class="icon">
+										<img src="../../static/images/3.png">
+									</div>
+									<div class="startPlace">北航校区航校试试啥事的撒打算多</div>
+									<div class="time">12:00</div>
+									<div class="order">订</div>
+								</div>
+							</div>
+						</div>
+						<div class="ui-block-d">
+							<div class="arrow-bottom"></div>
+						</div>
+					</div>
+					<!--显示票信息 -->
+					<div class="ticketInfo">
+						<div>
+							<div class="teacherTicket">
+								教工票：<span>10/15张</span>
+							</div>
+							<div class="studentTicket">
+								学生票：<span>5/35张</span>
+							</div>
+						</div>
+						<div class="attention">注：教工票预留发车前15分钟</div>
+					</div>
+				</div>
+				<div style="height: 4px; background-color: rgba(0, 0, 0, 0.1);"></div>
+			</div>
+		</div>
+
+		<script>
+		$(function() {
+			var index;
+			//loading层
+			layui.use("layer",function(){
+				$(" #centerPart>div").tap(function() {
+					$(this).css("background", "#828282");
+					$(this).css("color", "white");
+					$(this).siblings().css("background", "");
+					$(this).siblings().css("color", "black");
+				});
+				//查询点击事件
+				$(".btnSearch").on("tap", function() {
+                    
+				});
+				//订票点击事件
+				$(".order").on("tap", function() {
+					var display =$(this).closest(".shiftsInfo").next(".ticketInfo").css('display');
+					if(display == 'none'){
+						 $(this).closest(".shiftsInfo").find(".ui-block-d").find("div").attr("class","arrow-bottom"); 
+						 $(this).closest(".shiftsInfo").css("border-bottom","2px dotted gainsboro");
+						 $(this).closest(".shiftsInfo").next(".ticketInfo").show();
+					}else{
+						 $(this).closest(".shiftsInfo").find(".ui-block-d").find("div").attr("class","arrow-left"); 
+						 $(this).closest(".shiftsInfo").css("border-bottom",'0px');
+						 $(this).closest(".shiftsInfo").next(".ticketInfo").hide();
+					}
+				});
+				//查询ajax
+				
+			});
+		});
+		</script>
+
+	</body>
+</html>

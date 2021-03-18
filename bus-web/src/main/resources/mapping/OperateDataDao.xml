@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.OperateDataDao">
+	<select id="getOperateDataCount" resultType="Integer">
+		SELECT COUNT(*) FROM sbus_shifts_real s
+		left join sbus_line l on
+		s.line_id=l.line_id
+		left join sbus_driver d on s.driver_id=d.driver_id
+		left join sbus_vehicle v
+		on s.vehicle_id=v.vehicle_id
+		where 1=1
+		<if test="columnMap.start_date!=null">AND <![CDATA[ s.shifts_date>=#{columnMap.start_date} ]]>
+		</if>
+		<if test="columnMap.end_date!=null">AND <![CDATA[s.shifts_date<=#{columnMap.end_date}]]>
+		</if>
+			<if test="columnMap.start_time!=null">AND <![CDATA[ s.depart_time>=#{columnMap.start_time} ]]>
+		</if>
+		<if test="columnMap.end_time!=null">AND <![CDATA[s.depart_time<=#{columnMap.end_time}]]>
+		</if>
+		<if test="columnMap.driver_name!=null">AND d.driver_name=#{columnMap.driver_name}</if>
+		<if test="columnMap.line_name!=null">AND l.line_name=#{columnMap.line_name}</if>
+		<if test="columnMap.up_origin_name!=null">AND l.up_origin_name=#{columnMap.up_origin_name}
+		</if>
+		<if test="columnMap.vehicle_number!=null">AND v.vehicle_number=#{columnMap.vehicle_number}</if>
+		<if test="columnMap.shifts_number!=null">AND s.shifts_number=#{columnMap.shifts_number}</if>
+	</select>
+	<select id="getOperateDataListByLimit" parameterType="String"
+		resultType="java.util.Map">
+		SELECT
+		DATE_FORMAT(s.shifts_date,"%Y-%m-%d") as shifts_date,
+		d.driver_name,s.shifts_number,l.line_name,l.up_total_distance,
+		DATE_FORMAT(s.depart_time,"%H:%i") as depart_time,
+		DATE_FORMAT(s.arrive_time,"%H:%i") as
+		arrive_time,s.student_num,s.teacher_num,FLOOR((s.student_num+s.teacher_num)/v.seat_num*100)
+		as seat_rate,
+		v.vehicle_number,l.up_origin_name,l.up_terminal_name
+		from
+		sbus_shifts_real s
+		left join sbus_line l on s.line_id=l.line_id
+		left
+		join sbus_driver d on s.driver_id=d.driver_id
+		left join
+		sbus_vehicle v
+		on s.vehicle_id=v.vehicle_id
+		where 1=1
+		<if test="columnMap.start_date!=null">AND <![CDATA[ s.shifts_date>=#{columnMap.start_date} ]]>
+		</if>
+		<if test="columnMap.end_date!=null">AND <![CDATA[s.shifts_date<=#{columnMap.end_date}]]>
+		</if>
+		<if test="columnMap.start_time!=null">AND <![CDATA[ s.depart_time>=#{columnMap.start_time} ]]>
+		</if>
+		<if test="columnMap.end_time!=null">AND <![CDATA[s.depart_time<=#{columnMap.end_time}]]>
+		</if>
+		<if test="columnMap.driver_name!=null">AND driver_name=#{columnMap.driver_name}</if>
+		<if test="columnMap.line_name!=null">AND line_name=#{columnMap.line_name}</if>
+		<if test="columnMap.up_origin_name!=null">AND up_origin_name=#{columnMap.up_origin_name}
+		</if>
+		<if test="columnMap.vehicle_number!=null">AND vehicle_number=#{columnMap.vehicle_number}</if>
+		<if test="columnMap.shifts_number!=null">AND s.shifts_number=#{columnMap.shifts_number}</if>
+		order by s.line_id,s.depart_time
+		<if test="offset>=0 and size>=0">limit #{offset}, #{size}</if>
+	</select>
+	<select id="getOperateDataList" parameterType="String"
+		resultType="java.util.Map">
+		SELECT
+		DATE_FORMAT(s.shifts_date,"%Y-%m-%d") as shifts_date,
+		d.driver_name,s.shifts_number,l.line_name,l.up_total_distance,s.student_num,s.teacher_num,FLOOR((s.student_num+s.teacher_num)/v.seat_num*100)
+		as seat_rate,
+		DATE_FORMAT(s.depart_time,"%H:%i") as depart_time,
+		DATE_FORMAT(s.arrive_time,"%H:%i") as arrive_time,
+		v.vehicle_number,l.up_origin_name,l.up_terminal_name
+		from
+		sbus_shifts_real s
+		left join sbus_line l on s.line_id=l.line_id
+		left
+		join sbus_driver d on s.driver_id=d.driver_id
+		left join
+		sbus_vehicle v
+		on s.vehicle_id=v.vehicle_id
+		where 1=1
+			<if test="columnMap.start_date!=null">AND <![CDATA[ s.shifts_date>=#{columnMap.start_date} ]]>
+		</if>
+		<if test="columnMap.end_date!=null">AND <![CDATA[s.shifts_date<=#{columnMap.end_date}]]>
+		</if>
+			<if test="columnMap.start_time!=null">AND <![CDATA[ s.depart_time>=#{columnMap.start_time} ]]>
+		</if>
+		<if test="columnMap.end_time!=null">AND <![CDATA[s.depart_time<=#{columnMap.end_time}]]>
+		</if>
+		<if test="columnMap.driver_name!=null">AND driver_name=#{columnMap.driver_name}</if>
+		<if test="columnMap.line_name!=null">AND line_name=#{columnMap.line_name}</if>
+		<if test="columnMap.up_origin_name!=null">AND up_origin_name=#{columnMap.up_origin_name}
+		</if>
+		<if test="columnMap.vehicle_number!=null">AND vehicle_number=#{columnMap.vehicle_number}</if>
+		order by s.line_id,s.depart_time
+	</select>
+</mapper>

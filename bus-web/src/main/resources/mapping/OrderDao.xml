@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.OrderDao">
+	
+	<sql id="tableName">sbus_order</sql>
+	
+	<select id="getList" resultType="com.zah.entity.Order">
+		SELECT order_id, order_sn, price, passenger_type, auth_type, passenger_id, shifts_date, shifts_number, create_time, order_state, refund_sn, refund_time, use_time FROM sbus_order
+		WHERE  #{time} > create_time 
+		<if test="state != 2">AND order_state = 1 
+		</if>
+		ORDER BY create_time DESC limit #{page}, #{size}
+	</select>
+
+	<insert id="insert" parameterType="String">
+		INSERT INTO
+		<include refid="tableName" />
+		SET
+		<foreach collection="setMap" index="key" item="value"
+			separator=",">
+			${key}=#{value}
+		</foreach>
+	</insert>
+
+	<update id="updateOrderSn">
+		UPDATE sbus_order set order_sn = #{orderSn}, order_state = 1 WHERE order_id = #{orderId}
+	</update>
+	
+	<update id="applicationForDrawback">
+		UPDATE sbus_order set order_state = 5 WHERE order_id = #{orderId} AND order_state = 1
+	</update>
+	
+	<select id="getOrder" resultType="com.zah.entity.Order">
+		SELECT order_id, order_sn, price, passenger_type, auth_type, passenger_id, shifts_date, shifts_number, create_time, order_state, refund_sn, refund_time, use_time FROM sbus_order
+		WHERE  #{orderId} = order_id 
+	</select>
+	
+	<update id="updateOrderState">
+		UPDATE sbus_order set order_state = #{state}, use_time = #{useTime} WHERE order_id = #{orderId}
+	</update>
+	
+	
+	
+	
+
+</mapper>

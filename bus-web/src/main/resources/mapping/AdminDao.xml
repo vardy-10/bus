@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.AdminDao">
+
+	<select id="selectInfoByKey" resultType="com.zah.entity.AdminUser"
+		parameterType="String">
+		SELECT ${columns} FROM sbus_admin WHERE ${key}=#{value}
+	</select>
+	<update id="updatePasswordbyId" parameterType="String">
+		UPDATE sbus_admin
+		SET password=#{password} WHERE admin_id=#{admin_id}
+	</update>
+
+	<select id="selectRoleInfo" resultType="com.zah.entity.Role">
+		SELECT
+		role_code,role_name,show_order FROM sbus_admin_role WHERE 1=1 ORDER
+		by
+		show_order
+	</select>
+	<select id="getAdminListCount" resultType="Integer">
+		SELECT COUNT(admin_id) FROM sbus_admin WHERE type=2
+		<if test="columnMap.admin_id!=null">AND admin_id!=#{columnMap.admin_id}</if>
+		<if test="columnMap.username!=null">AND username=#{columnMap.username}</if>
+
+	</select>
+	<select id="getAdminList" resultType="com.zah.entity.AdminUser">
+		SELECT admin_id,username,name FROM sbus_admin WHERE type=2
+		<if test="columnMap.admin_id!=null">AND admin_id!=#{columnMap.admin_id}</if>
+		<if test="columnMap.username!=null">AND username=#{columnMap.username}</if>
+		ORDER BY admin_id DESC limit #{offset},#{size}
+	</select>
+	<insert id="addAdmin" parameterType="com.zah.entity.AdminUser">
+		INSERT INTO
+		sbus_admin
+		(type,username,password,name,role_list)
+		VALUES
+		(2,#{username},#{password},#{name},#{role_list})
+	</insert>
+	<delete id="deleteAdmin" parameterType="String">
+		DELETE FROM sbus_admin
+		WHERE admin_id=#{admin_id}
+	</delete>
+	<update id="updateAdminInfo" parameterType="com.zah.entity.AdminUser">
+		UPDATE sbus_admin SET
+		<if test="password!=null and password!=''">password=#{password},</if>
+		<if test="name!=null">name=#{name}</if>
+		<if test="role_list!=null">,role_list=#{role_list}</if>
+		WHERE admin_id=#{admin_id}
+	</update>
+</mapper>

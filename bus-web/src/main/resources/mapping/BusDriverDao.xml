@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.BusDriverDao">
+	<sql id="tableName">sbus_driver</sql>
+	<select id="getCountBy" resultType="Integer">
+		SELECT COUNT(driver_id) FROM sbus_driver WHERE 1=1
+		<if test="columnMap.driver_name!=null">AND driver_name=#{columnMap.driver_name}
+		</if>
+		<if test="columnMap.driver_number!=null">AND driver_number=#{columnMap.driver_number}
+		</if>
+	</select>
+	<select id="getBusDriverList" resultType="com.zah.entity.BusDriver">
+		SELECT
+		driver_id,driver_number,driver_name,driver_phone,driver_identity,driver_sex
+		FROM
+		sbus_driver WHERE 1=1
+		<if test="columnMap.driver_name!=null">AND driver_name=#{columnMap.driver_name}
+		</if>
+		<if test="columnMap.driver_number!=null">AND driver_number=#{columnMap.driver_number}
+		</if>
+		ORDER BY driver_id DESC limit
+		#{offset},#{size}
+	</select>
+	<select id="selectInfoByKey" resultType="com.zah.entity.BusDriver"
+		parameterType="String">
+		SELECT ${columns} FROM sbus_driver WHERE
+		${key}=#{value}
+	</select>
+	<delete id="deleteBusDriver" parameterType="String">
+		DELETE FROM
+		sbus_driver
+		WHERE driver_id=#{driver_id}
+	</delete>
+	<select id="select" resultType="com.zah.entity.BusDriver"
+		parameterType="String">
+		SELECT ${otherMap.column} FROM
+		<include refid="tableName" />
+		<if test="otherMap.join!=null">${otherMap.join}</if>
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+		<if test="otherMap.group!=null">GROUP BY ${otherMap.group}</if>
+		<if test="otherMap.order!=null">ORDER BY ${otherMap.order}</if>
+		<if test="otherMap.limit!=null">LIMIT ${otherMap.limit}</if>
+	</select>
+	<insert id="insert" parameterType="String">
+		INSERT INTO
+		<include refid="tableName" />
+		SET
+		<foreach collection="setMap" index="key" item="value"
+			separator=",">
+			${key}=#{value}
+		</foreach>
+	</insert>
+	<update id="update" parameterType="String">
+		UPDATE
+		<include refid="tableName" />
+		SET
+		<foreach collection="setMap" index="key" item="value"
+			separator=",">
+			${key}=#{value}
+		</foreach>
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+	</update>
+	<delete id="delete" parameterType="String">
+		DELETE FROM
+		<include refid="tableName" />
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+	</delete>
+
+	
+	
+	
+	
+
+
+</mapper>

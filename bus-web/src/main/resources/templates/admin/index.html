@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>北航校车管理系统</title>
+
+<link rel="stylesheet"   href="../../layui/css/layui.css">
+<link rel="stylesheet" href="../../awesome/css/font-awesome.min.css" >
+<script type="text/javascript "
+	src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/index.js"></script>
+<script src="../../js/common.js"></script>
+<style type="text/css">
+.layui-body{
+bottom: 0px!important;
+}
+i{
+width:35px;
+height:30px;
+text-align:center;
+margin-right: 5px;
+vertical-align: middle;
+}
+.title{
+margin-left:-10px;
+}
+</style>
+</head>
+<body class="layui-layout-body">
+	<div class="layui-layout layui-layout-admin">
+		<div class="layui-header">
+			<div>
+				<a class="layui-logo" href="homePage" target="iframe_right"
+					style="font-size: 18px; font-family: 微软雅黑;"
+					onclick="cancelSelect()"><i class="fa fa-home fa-2x" aria-hidden="true"></i>北航校车管理系统</a>
+			</div>
+			<ul class="layui-nav layui-layout-right">
+				<li class="layui-nav-item"><a href="javascript:;" id="userName"
+					th:text="${#strings.escapeXml(session.loginInfo.username)}"></a>
+					<dl class="layui-nav-child">
+						<dd>
+							<a href="aboutMe" target="iframe_right">个人信息</a>
+						</dd>
+						<dd>
+							<a href="changePass" target="iframe_right">修改密码</a>
+						</dd>
+					</dl></li>
+				<li class="layui-nav-item"><a href="/manage/exitSystem"
+					id="Exit">退出</a></li>
+			</ul>
+		</div>
+		<div class="layui-side layui-bg-black">
+			<div class="layui-side-scroll" id="memu">
+				<ul class="layui-nav layui-nav-tree" lay-filter="test">
+					<li class="layui-nav-item layui-nav-itemed"
+						th:if="${#strings.contains(','+session.loginInfo.role_list+',',',schoolBus,')||#strings.isEmpty(session.loginInfo.role_list)}"><a
+						class="" href="javascript:;">
+						<i class="fa fa-calendar-check-o fa-2x title" aria-hidden="true"></i>排班管理</a>
+						<dl class="layui-nav-child ">
+							<dd>
+								<a href="tmplShow" target="iframe_right"><i class="fa fa-clock-o fa-2x" aria-hidden="true"></i>线路班次</a>
+							</dd>
+								<dd>
+								<a href="shiftsPlanShow" target="iframe_right"><i class="fa fa-list-alt fa-2x" aria-hidden="true"></i>运营计划</a>
+							</dd>
+								<dd>
+								<a href="shiftsPlanShow?act=publish" target="iframe_right"><i class="fa fa-share-square-o fa-2x" aria-hidden="true"></i>发布计划</a>
+							</dd>
+						</dl></li>
+					<li class="layui-nav-item layui-nav-itemed"
+						th:if="${#strings.contains(','+session.loginInfo.role_list+',',',schoolBus,')||#strings.isEmpty(session.loginInfo.role_list)}"><a
+						href="javascript:;"><i class="fa fa-laptop fa-2x title" aria-hidden="true"></i>运营调度</a>
+						<dl class="layui-nav-child ">
+							<dd>
+								<a href="operatePlanMonitorShow" target="iframe_right"><i class="fa fa-stethoscope fa-2x" aria-hidden="true"></i>运营监控</a>
+							</dd>
+							<dd>
+								<a href="flightLineMonitor" target="iframe_right"><i class="fa fa-search fa-2x" aria-hidden="true"></i>班车监控</a>
+							</dd>
+							<dd>
+								<a href="operatePlanDispatchShow" target="iframe_right"><i class="fa fa-window-restore fa-2x" aria-hidden="true"></i>调度调整</a>
+							</dd>
+						</dl></li>
+							<li class="layui-nav-item layui-nav-itemed"
+						th:if="${#strings.contains(','+session.loginInfo.role_list+',',',schoolBus,')||#strings.isEmpty(session.loginInfo.role_list)}"><a
+						href="javascript:;"> <i class="fa fa-area-chart fa-2x title" aria-hidden="true"></i> 运营报表</a>
+						<dl class="layui-nav-child ">
+							<dd>
+								<a href="operateDataShow?act=data" target="iframe_right"><i class="fa fa-files-o fa-2x" aria-hidden="true"></i>运营查询</a>
+							</dd>
+							<dd>
+								<a href="operateDataShow?act=statistics" target="iframe_right"><i class="fa fa-group (alias) fa-2x" aria-hidden="true"></i>客流统计</a>
+							</dd>
+						</dl></li>
+							<li class="layui-nav-item layui-nav-itemed"
+						th:if="${#strings.contains(','+session.loginInfo.role_list+',',',ticket,')||#strings.isEmpty(session.loginInfo.role_list)}"><a
+						href="javascript:;"><i class="fa fa-newspaper-o fa-2x title" aria-hidden="true"></i>票务管理</a>
+						<dl class="layui-nav-child ">
+							<dd>
+								<a href="tempCheckShow" target="iframe_right"><i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>用户审核</a>
+							</dd>
+							<dd>
+								<a href="busOrderShow" target="iframe_right"><i class="fa fa-wpforms fa-2x" aria-hidden="true"></i>订单处理</a>
+							</dd>
+							<dd>
+								<a href="#" target="iframe_right"> <i class="fa fa-ticket fa-2x" aria-hidden="true"></i>退票管理</a>
+							</dd>
+							<dd> 
+								<a href="busAccountCheckShow" target="iframe_right"> <i class="fa fa-yen (alias)  fa-2x" aria-hidden="true"></i>票款统计</a>
+							</dd>
+								<dd>
+								<a href="ticketConfigPage" target="iframe_right"> <i class="fa fa-cog fa-2x" aria-hidden="true"></i>票务配置</a>
+							</dd>
+						</dl></li>
+					<li class="layui-nav-item layui-nav-itemed"
+						th:if="${#strings.contains(','+session.loginInfo.role_list+',',',schoolBus,')||#strings.isEmpty(session.loginInfo.role_list)}"><a
+						href="javascript:;"><i class="fa fa-cubes fa-2x title" aria-hidden="true"></i>基础信息</a>
+						<dl class="layui-nav-child ">
+							<dd>
+								<a href="busDriverShow" target="iframe_right"><i class="fa fa-address-book fa-2x" aria-hidden="true"></i>司机管理</a>
+							</dd>
+							<dd> 
+								<a href="busVehicleShow" target="iframe_right"><i class="fa fa-bus fa-2x" aria-hidden="true"></i>车辆管理</a>
+							</dd>
+							<dd>
+								<a href="busLineShow" target="iframe_right"><i class="fa fa-exchange fa-2x" aria-hidden="true"></i>线路管理</a>
+							</dd>
+							<dd> 
+								<a href="vehiclePositionShow" target="iframe_right"><i class="fa fa-line-chart fa-2x" aria-hidden="true"></i>车辆行驶轨迹管理</a>
+							</dd>
+							<dd>
+								<a href="schoolBusConfigPage" target="iframe_right"><i class="fa fa-cog fa-2x" aria-hidden="true"></i>发车配置</a>
+							</dd>
+						</dl></li>
+					<li class="layui-nav-item layui-nav-itemed"
+						th:if="${#strings.contains(','+session.loginInfo.role_list+',',',school,')||#strings.isEmpty(session.loginInfo.role_list)}"><a
+						class="" href="javascript:;">学校管理</a>
+						<dl class="layui-nav-child ">
+							<dd>
+								<a href="opinionShow" target="iframe_right">意见管理</a>
+							</dd>
+							<dd>
+								<a href="retrieveShow" target="iframe_right">失物招领</a>
+							</dd>
+							<dd>
+								<a href="noticeShow" target="iframe_right">公告管理</a>
+							</dd>
+						</dl></li>
+					<li class="layui-nav-item layui-nav-itemed"
+						th:if="${#strings.contains(','+session.loginInfo.role_list+',',',system,')||#strings.isEmpty(session.loginInfo.role_list)}"><a
+						class="" href="javascript:;"> <i class="fa fa-cog fa-2x" aria-hidden="true"></i>系统管理</a>
+						<dl class="layui-nav-child">
+							<dd>
+								<a href="show" target="iframe_right"><i class="fa fa-vcard-o (alias) fa-2x" aria-hidden="true"></i>管理员管理</a>
+							</dd>
+							<dd>
+								<a href="showLog" target="iframe_right"><i class="fa fa-list fa-2x" aria-hidden="true"></i>管理员日志列表</a>
+							</dd>
+						</dl></li>
+					<li class="layui-nav-item layui-nav-itemed"
+						th:if="${#strings.contains(','+session.loginInfo.role_list+',',',ticket,')||#strings.isEmpty(session.loginInfo.role_list)}"><a
+						href="aboutUs" target="iframe_right"><i class="fa fa-envira fa-2x" aria-hidden="true"></i>关于</a>
+						</dl></li>
+				</ul>
+			</div>
+		</div>
+		<div class="layui-body">
+			<!-- 内容主体区域 -->
+			<iframe src="homePage" id="indexBody" name="iframe_right"
+				style="display: block; width: 99%; height: 99%; border: 0; margin: 0 auto;"></iframe>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function cancelSelect() {
+			$(".layui-this").removeClass('layui-this');
+		}
+	</script>
+</body>
+</html>

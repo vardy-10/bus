@@ -1,0 +1,53 @@
+{
+	"admin_id": "1",
+	"type": "1",
+	"username": "ddvdv",
+	"password": "fdvdfvfv",
+	"name": "夏德宇",
+	"roles":[
+		{
+			"role_code":"1",
+			"role_name":"超级管理员"
+		},
+		{
+			"role_code":"2",
+			"role_name":"管理员"
+		},
+		{
+			"role_code":"3",
+			"role_name":"司机"
+		},
+		{
+			"role_code":"4",
+			"role_name":"教师"
+		},
+		{
+			"role_code":"4",
+			"role_name":"教师"
+		},
+		{
+			"role_code":"4",
+			"role_name":"教师"
+		},
+		{
+			"role_code":"4",
+			"role_name":"教师"
+		},
+		{
+			"role_code":"4",
+			"role_name":"教师"
+		},
+		{
+			"role_code":"4",
+			"role_name":"教师"
+		},
+		{
+			"role_code":"4",
+			"role_name":"教师"
+		},
+		{
+			"role_code":"5",
+			"role_name":"学生"
+		}
+	]
+}

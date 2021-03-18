@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.DepartDao">
+	<select id="checkDriverIsExist" resultType="Integer"
+		parameterType="String">
+		SELECT Count(${columns}) FROM ${table} WHERE
+		${key}=#{value} And depart_time>#{time} 
+	</select>
+	
+	
+	
+	
+	
+
+
+</mapper>

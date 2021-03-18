@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>北航校车管理系统</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/bus/busLineShow.js"></script>
+<script src="../../js/common.js"></script>
+<script type="text/javascript "
+	src="../../static/js/jquery-1.9.1.min.js"></script>
+<style type="text/css">
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	border-color: grey;
+}
+
+.layui-table th {
+	text-align: left !important;
+	font-weight: 400;
+	background-color: #f2f2f2;
+}
+
+.layui-table tr {
+	text-align: left !important;
+	transition: all .3s;
+	-webkit-transition: all .3s;
+	display: table-row;
+	vertical-align: inherit;
+	border-color: inherit;
+}
+
+tr, th {
+	text-align: center !important;
+}
+
+td {
+	word-wrap: break-word;
+}
+
+.date {
+	font-weight: bolder !important;
+	/* color: red!important; */
+}
+</style>
+</head>
+<body>
+	<div>
+		<fieldset class="layui-elem-field layui-field-title"
+			style="margin-top: 20px;">
+			<legend>
+				排班计划【<span th:text="${#strings.escapeXml(line_name)}"></span>】
+			</legend>
+		</fieldset>
+		<input id="temp" type="hidden">
+		<div>
+			<div class="layui-inline">
+				<label class="layui-form-label">自动排班：</label>
+				<div class="layui-input-inline">
+					<input type="text" name="title" lay-verify="title"
+						autocomplete="off" placeholder="" class="layui-input" value="未设置">
+					<!--保存线路id  -->
+					<input type="hidden" name="line_id"
+						th:value='${#strings.escapeXml(line_id)}' id="line_id"> <input
+						type="hidden" name="depart_week"
+						th:value='${#strings.escapeXml(depart_week)}' id="depart_week">
+				</div>
+
+				<div style="float: right; margin-left: 10px; margin-top: 4px;">
+					<i class="layui-icon layui-icon-help"
+						style="font-size: 14px; color: green;" title="未设置未设置" id="info"></i>
+					<button class="layui-btn layui-btn-sm" id="toUpdate">去修改</button>
+				</div>
+			</div>
+			<div style="float: right; margin-right: 20px; margin-top: 4px;"">
+				<button class="layui-btn layui-btn-sm" id="lookSchedule">查看日程</button>
+			</div>
+			<div id="ScheduleList"></div>
+			<!-- 数据为空的列 -->
+			<div id="noData" style="display: none;">
+				<div class="layui-form">
+					<table border="1" cellspacing="0" class="layui-table"
+						style="table-layout: fixed; display: table;">
+						<colgroup>
+							<col width="8%"></col>
+							<col width="8%"></col>
+							<col width="15%"></col>
+							<col width="15%"></col>
+							<col width="8%"></col>
+							<col width="8%"></col>
+							<col width="15%"></col>
+							<col width="15%"></col>
+							<col width="8%"></col>
+						</colgroup>
+						<tr>
+							<th rowspan="2" width="10%"
+								style="text-align: center !important;">日期</th>
+							<th colspan="4" width="45%" class="upLineName"
+								style="text-align: center !important;">上行（线路名）</th>
+							<th colspan="4" width="45%" class="downLineName"
+								style="text-align: center !important;">下行（线路名）</th>
+						</tr>
+						<tr>
+							<th>时间</th>
+							<th>车辆</th>
+							<th>司机</th>
+							<th>操作</th>
+							<th>时间</th>
+							<th>车辆</th>
+							<th>司机</th>
+							<th>操作</th>
+						</tr>
+						<tr>
+							<td rowspan="1" style="text-align: center;">
+								<div class="week">周一</div>
+								<div>
+									<a class="layui-btn layui-btn-sm add">添加</a>
+								</div>
+							</td>
+							<td colspan="8" style="text-align: center;">无数据</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<!--数据不为空的列  -->
+			<div id="haveData" style="display: none;">
+				<div class="layui-form">
+					<table border="1" cellspacing="0" class="layui-table"
+						style="table-layout: fixed; display: table;">
+						<colgroup>
+							<col width="8%"></col>
+							<col width="8%"></col>
+							<col width="15%"></col>
+							<col width="15%"></col>
+							<col width="8%"></col>
+							<col width="8%"></col>
+							<col width="15%"></col>
+							<col width="15%"></col>
+							<col width="8%"></col>
+						</colgroup>
+						<tr>
+							<th rowspan="2" width="10%"
+								style="text-align: center !important;">日期</th>
+							<th colspan="4" width="45%" class="upLineName"
+								style="text-align: center !important;">上行（线路名）</th>
+							<th colspan="4" width="45%" class="downLineName"
+								style="text-align: center !important;">下行（线路名）</th>
+						</tr>
+						<tr>
+							<th>时间</th>
+							<th>车辆</th>
+							<th>司机</th>
+							<th>操作</th>
+							<th>时间</th>
+							<th>车辆</th>
+							<th>司机</th>
+							<th>操作</th>
+						</tr>
+						<tr>
+							<td rowspan="2" style="text-align: center;" class="rowspanNum">
+
+								<div class="week">周一</div>
+								<div>
+									<a class="layui-btn layui-btn-sm add">添加</a>
+								</div>
+							</td>
+							<td class="upTime" rowspan="1"></td>
+							<input type="hidden" name="uptime" value="">
+							<input type="hidden" name="updriverid" value="">
+							<input type="hidden" name="upvehicleid" value="">
+							<td class="upVehicle"></td>
+							<td class="upDriver"></td>
+							<td class="upBar"></td>
+							<td class="downTime" rowspan="1"></td>
+							<input type="hidden" name="downtime" value="">
+							<input type="hidden" name="downdriverid" value="">
+							<input type="hidden" name="downvehicleid" value="">
+							<td class="downVehicle"></td>
+							<td class="downDriver"></td>
+							<td class="downBar"></td>
+						</tr>
+					</table>
+				</div>
+
+				<!--  -->
+			</div>
+			<!-- <hr> -->
+			<div class="layui-btn-container"></div>
+			<script th:inline="javascript">
+				var list = null;
+				var weekList = new Array(7); //定义一个保存一个星期的集合要append的html
+				var upList = new Array();//定义一个保存上行的数组
+				var downList = new Array();//定义一个保存下行的数组
+				var lineList = null;
+				//列表加载
+				getTableInfo();
+				function getTableInfo() {
+					layui.use([ 'form' ], function() {
+						var $ = layui.jquery, form = layui.form;
+						var layer = layui.layer;
+						var i = layer.load(2);
+						$.ajax({
+							url : 'showDepartPlan',
+							data : {
+								"line_id" : $("#line_id").val(),
+							},
+
+							dataType : 'json',
+							type : 'post',
+							success : function(data) {
+
+								layer.close(i);
+								$("#ScheduleList").empty();//清空元素
+								list = data.planList;
+								lineList = data.lineList;
+								console.log(lineList);
+								showData();
+							},
+							error : function() {
+								layer.close(i);
+								layer.msg('服务器错误请联系管理员', {
+									icon : 2,
+									time : waitTime
+								}, function() {
+
+								});
+							}
+						});
+					});
+
+				}
+				//更具当前时间更新列表日期
+				function getDate() {
+					//获取所有的
+					var lineInfos = $(".lineInfo");
+					/*  var weekArray = new Array("日", "一", "二", "三", "四", "五", "六");
+					 var week = weekArray[new Date(nowDate).getDay()]; */
+					$(lineInfos)
+							.each(
+									function(i) {
+										$(this).find(".week").text(
+												getWeek(i + 1 + ''));
+										var up_origin_name = lineList[0].up_origin_name == '' ? '无'
+												: lineList[0].up_origin_name;
+										var up_terminal_name = lineList[0].up_terminal_name == '' ? '无'
+												: lineList[0].up_terminal_name;
+										var down_origin_name = lineList[0].down_origin_name == '' ? '无'
+												: lineList[0].down_origin_name;
+										var down_terminal_name = lineList[0].down_terminal_name == '' ? '无'
+												: lineList[0].down_terminal_name;
+										$(this).find(".upLineName").text(
+												"上行（" + up_origin_name + "——"
+														+ up_terminal_name
+														+ "）");
+										$(this).find(".downLineName").text(
+												"下行（" + down_origin_name + "——"
+														+ down_terminal_name
+														+ "）");
+									});
+				}
+				//遍历7天
+				function getData() {
+					for (var i = 1; i <= 7; i++) {
+						$(list).each(function() {
+							if (this.depart_week == i) {
+								dateTime = this.date;//依次保存日期
+								if (this.depart_dir == '1') {
+									if (this != null) {
+										upList.push(this);
+									}
+								} else {
+									if (this != null) {
+										downList.push(this);
+									}
+								}
+							}
+						});
+						//如果上下行的数据都为空
+						if (upList.length <= 0 && downList.length <= 0) {
+							var newWeek = $("<div class='lineInfo noData'></div>");
+							newWeek.html($("#noData").html());
+							weekList[i] = newWeek;
+						} else {
+							if (upList.length > downList.length) {
+								$("#haveData").find(".week").text(
+										getWeek(i + ''));
+								var newWeek = $("<div class='lineInfo'></div>");
+								newWeek.html($("#haveData").html());
+								//先遍历上行
+								newWeek.find(".rowspanNum").attr("rowSpan",
+										upList.length);
+								for (var j = 0; j < upList.length; j++) {
+									if (j == 0) {
+										newWeek.find(".week").text(
+												upList[0].date);
+										newWeek
+												.find(".upTime")
+												.html(
+														upList[0].depart_time
+																+ '<div><a class=\"layui-btn layui-btn-sm upAdd\">添加</a></div> ');
+										newWeek.find(".upVehicle").text(
+												upList[0].vehicle_number);
+										newWeek.find("input[name=uptime]").val(
+												upList[0].depart_time);
+										newWeek.find("input[name=upvehicleid]")
+												.val(upList[0].vehicle_id);
+										newWeek.find("input[name=updriverid]")
+												.val(upList[0].driver_id);
+										newWeek.find(".upDriver").text(
+												upList[0].driver_name);
+										newWeek
+												.find(".upBar")
+												.html(
+														"<a\n" +
+												  "   class=\"layui-btn layui-btn-sm layui-btn-normal upEdit\">编辑</a><a class=\"layui-btn layui-btn-sm  layui-btn-danger upDelete\">删除</a>");
+									} else {
+										var tr = $("<tr>\n"
+												+ "        <td class=\"upTime\" rowspan=\"1\">"
+												+ upList[j].depart_time
+												+ "<div><a class=\"layui-btn layui-btn-sm upAdd\">添加</a></div> </td>\n"
+												+ "        <input type=\"hidden\" name=\"uptime\" value=\""+upList[j].depart_time+"\">\n"
+												+ "        <input type=\"hidden\" name=\"upvehicleid\" value=\""+upList[j].vehicle_id+"\">\n"
+												+ "        <input type=\"hidden\" name=\"updriverid\" value=\""+upList[j].driver_id+"\">\n"
+												+ "        <td class=\"upVehicle\">"
+												+ upList[j].vehicle_number
+												+ "</td>\n"
+												+ "        <td class=\"upDriver\">"
+												+ upList[j].driver_name
+												+ "</td>\n"
+												+ "         <td class=\"upBar\"><a\n" +
+										        "    class=\"layui-btn layui-btn-sm layui-btn-normal upEdit\">编辑</a><a class=\"layui-btn layui-btn-sm  layui-btn-danger upDelete\">删除</a></td>\n"
+												+ "    <td class=\"downTime\" rowspan=\"1\"></td>\n"
+												+ "        <input type=\"hidden\" name=\"downtime\" value=\"\">\n"
+												+ "        <input type=\"hidden\" name=\"downvehicleid\" value=\"\">\n"
+												+ "        <input type=\"hidden\" name=\"downdriverid\" value=\"\">\n"
+												+ "        <td class=\"downVehicle\"></td>\n"
+												+ "        <td class=\"downDriver\"></td>\n"
+												+ "        <td  class=\"downBar\"></td>\n"
+												+ "    </tr>");
+										newWeek.find("table").append(tr);
+									}
+								}
+								//获得所有的tr
+								var allTr = newWeek.find(" table tr:gt(1)");
+								for (var z = 0; z < downList.length; z++) {
+									if (z == 0) {
+										newWeek
+												.find(".downTime:eq(0)")
+												.html(
+														downList[0].depart_time
+																+ '<div><a class=\"layui-btn layui-btn-sm downAdd\">添加</a></div>');
+										newWeek
+												.find(".downVehicle:eq(0)")
+												.text(
+														downList[0].vehicle_number);
+										newWeek.find(".downDriver:eq(0)").text(
+												downList[0].driver_name);
+										newWeek.find(
+												"input[name=downtime]:eq(0)")
+												.val(downList[0].depart_time);
+										newWeek.find(
+												"input[name=downvehicleid]")
+												.val(downList[0].vehicle_id);
+										newWeek
+												.find(
+														"input[name=downdriverid]")
+												.val(downList[0].driver_id);
+										newWeek
+												.find(".downBar:eq(0)")
+												.html(
+														"<a\n" +
+												  "   class=\"layui-btn layui-btn-sm layui-btn-normal downEdit\">编辑</a><a class=\"layui-btn layui-btn-sm  layui-btn-danger downDelete\">删除</a>");
+									} else {
+										newWeek.find(
+												"input[name=downtime]:eq(" + z
+														+ ")").val(
+												downList[z].depart_time);
+										newWeek.find(
+												"input[name=downvehicleid]:eq("
+														+ z + ")").val(
+												downList[z].vehicle_id);
+										newWeek.find(
+												"input[name=downdriverid]:eq("
+														+ z + ")").val(
+												downList[z].driver_id);
+										newWeek
+												.find(".downTime:eq(" + z + ")")
+												.html(
+														downList[z].depart_time
+																+ "<div><a class=\"layui-btn layui-btn-sm downAdd\">添加</a></div> ");
+										newWeek
+												.find(
+														".downVehicle:eq(" + z
+																+ ")")
+												.text(
+														downList[z].vehicle_number);
+										newWeek.find(
+												".downDriver:eq(" + z + ")")
+												.text(downList[z].driver_name);
+										newWeek
+												.find(".downBar:eq(" + z + ")")
+												.html(
+														"<a\n" +
+												  "   class=\"layui-btn layui-btn-sm layui-btn-normal downEdit\">编辑</a><a class=\"layui-btn layui-btn-sm  layui-btn-danger downDelete\">删除</a>");
+									}
+								}
+								weekList[i] = newWeek;
+							} else {
+								//上行个数小于下行个数
+								$("#haveData").find(".week").text(
+										getWeek(i + ''));
+								var newWeek = $("<div class='lineInfo'></div>");
+								newWeek.html($("#haveData").html());
+								//先遍历上行
+								newWeek.find(".rowspanNum").attr("rowSpan",
+										downList.length);
+								for (var j = 0; j < downList.length; j++) {
+									if (j == 0) {
+										newWeek.find(".week").text(
+												downList[0].date);
+										newWeek
+												.find(".downTime")
+												.html(
+														downList[0].depart_time
+																+ '<div><a class=\"layui-btn layui-btn-sm downAdd\">添加</a></div> ');
+										newWeek.find(".downVehicle").text(
+												downList[0].vehicle_number);
+										newWeek.find(".downDriver").text(
+												downList[0].driver_name);
+										newWeek.find("input[name=downtime]")
+												.val(downList[0].depart_time);
+										newWeek.find(
+												"input[name=downvehicleid]")
+												.val(downList[0].vehicle_id);
+										newWeek
+												.find(
+														"input[name=downdriverid]")
+												.val(downList[0].driver_id);
+										newWeek
+												.find(".downBar")
+												.html(
+														"<a\n" +
+												  "   class=\"layui-btn layui-btn-sm layui-btn-normal downEdit\">编辑</a><a class=\"layui-btn layui-btn-sm  layui-btn-danger downDelete\">删除</a>");
+									} else {
+										var tr = $("<tr>\n"
+												+ "        <td class=\"upTime\" rowspan=\"1\"></td>\n"
+												+ "        <input type=\"hidden\" name=\"uptime\" value=\"\">\n"
+												+ "        <input type=\"hidden\" name=\"upvehicleid\" value=\"\">\n"
+												+ "        <input type=\"hidden\" name=\"updriverid\" value=\"\">\n"
+												+ "        <td class=\"upVehicle\"><input type=\"hidden\" name=\"uptime\" value=\"\"></td>\n"
+												+ "        <td class=\"upDriver\"></td>\n"
+												+ "        <td class=\"upBar\"></td>\n"
+												+ "    <td class=\"downTime\" rowspan=\"1\">"
+												+ downList[j].depart_time
+												+ "<div><a class=\"layui-btn layui-btn-sm downAdd\">添加</a></div> </td>\n"
+												+ "        <input type=\"hidden\" name=\"downtime\" value=\""+downList[j].depart_time+"\">\n"
+												+ "        <input type=\"hidden\" name=\"downvehicleid\" value=\""+downList[j].vehicle_id+"\">\n"
+												+ "        <input type=\"hidden\" name=\"downdriverid\" value=\""+downList[j].driver_id+"\">\n"
+												+ "        <td class=\"downVehicle\"><input type=\"hidden\" name=\"downtime\" value=\""+downList[j].depart_time+"\">"
+												+ downList[j].vehicle_number
+												+ "</td>\n"
+												+ "        <td class=\"downDriver\">"
+												+ downList[j].driver_name
+												+ "</td>\n"
+												+ "        <td  class=\"downBar\"><a\n" +
+										        "    class=\"layui-btn layui-btn-sm layui-btn-normal downEdit\">编辑</a><a class=\"layui-btn layui-btn-sm  layui-btn-danger downDelete\">删除</a></td>\n"
+												+ "    </tr>");
+										newWeek.find("table").append(tr);
+									}
+								}
+								//获得所有的tr
+								var allTr = newWeek.find(" table tr:gt(1)");
+								for (var z = 0; z < upList.length; z++) {
+									if (z == 0) {
+										newWeek.find("input[name=uptime]").val(
+												upList[0].depart_time);
+										newWeek.find("input[name=upvehicleid]")
+												.val(upList[0].vehicle_id);
+										newWeek.find("input[name=updriverid]")
+												.val(upList[0].driver_id);
+										newWeek
+												.find(".upTime:eq(0)")
+												.html(
+														upList[0].depart_time
+																+ '<div><a class=\"layui-btn layui-btn-sm upAdd\">添加</a></div> ');
+										newWeek.find(".upVehicle:eq(0)").text(
+												upList[0].vehicle_number);
+										newWeek.find(".upDriver:eq(0)").text(
+												upList[0].driver_name);
+										newWeek
+												.find(".upBar:eq(0)")
+												.html(
+														"<a\n" +
+												  "   class=\"layui-btn layui-btn-sm layui-btn-normal upEdit\">编辑</a><a class=\"layui-btn layui-btn-sm  layui-btn-danger upDelete\">删除</a>");
+									} else {
+										newWeek.find(
+												"input[name=uptime]:eq(" + z
+														+ ")").val(
+												upList[z].time);
+										newWeek.find(
+												"input[name=updriverid]:eq("
+														+ z + ")").val(
+												upList[z].driver_id);
+										newWeek.find(
+												"input[name=upvehicleid]:eq("
+														+ z + ")").val(
+												upList[z].vehicle_id);
+										newWeek
+												.find(".upTime:eq(" + z + ")")
+												.html(
+														upList[z].depart_time
+																+ '<div><a class=\"layui-btn layui-btn-sm upAdd\">添加</a></div> ');
+										newWeek
+												.find(
+														".upVehicle:eq(" + z
+																+ ")")
+												.text(upList[z].vehicle_number);
+										newWeek.find(".upDriver:eq(" + z + ")")
+												.text(upList[z].driver_name);
+										newWeek
+												.find(".upBar:eq(" + z + ")")
+												.html(
+														"<a\n" +
+												  "   class=\"layui-btn layui-btn-sm layui-btn-normal upEdit\">编辑</a><a class=\"layui-btn layui-btn-sm  layui-btn-danger upDelete\">删除</a>");
+									}
+								}
+								//添加到星期数组
+								weekList[i] = newWeek;
+							}
+						}
+						//将数组清空
+						upList = new Array();
+						downList = new Array();
+					}
+				}
+				//进行数据添加
+				function showData() {
+					getData();
+					for (var i = 1; i <= 7; i++) {
+						if (weekList[i] != null) {
+							$("#ScheduleList").append(weekList[i]);
+						}
+					}
+					getDate();
+					mergeSame(".upTime");
+					mergeSame(".downTime");
+				}
+
+				//判断是否有数据
+				function pd(obj) {
+					if (obj.length <= 0) {
+						return false;
+					} else {
+						return true;
+					}
+				}
+				//根据数字判断星期几
+				function getWeek(i) {
+					var week = '';
+					switch (i) {
+					case '1':
+						week = '星期一';
+						break;
+					case '2':
+						week = '星期二';
+						break;
+					case '3':
+						week = '星期三';
+						break;
+					case '4':
+						week = '星期四';
+						break;
+					case '5':
+						week = '星期五';
+						break;
+					case '6':
+						week = '星期六';
+						break;
+					case '7':
+						week = '星期日';
+						break;
+
+					}
+					return week;
+				}
+				//根据星期几获得数字
+				function getWeekNum(i) {
+					var WeekNum = 0;
+					switch (i) {
+					case '星期一':
+						week = 1;
+						break;
+					case '星期二':
+						week = 2;
+						break;
+					case '星期三':
+						week = 3;
+						break;
+					case '星期四':
+						week = 4;
+						break;
+					case '星期五':
+						week = 5;
+						break;
+					case '星期六':
+						week = 6;
+						break;
+					case '星期日':
+						week = 7;
+						break;
+
+					}
+					return week;
+				}
+				//定义一个自动匹配合并的方法
+				function mergeSame(name) {
+					//获得所有的列表列
+					var lineInfos = $(".lineInfo:not(.noData)");
+					$(lineInfos)
+							.each(
+									function() {
+										//先判断上行
+										if ($(this).find("tr").length > 3) {
+											var trs = $(this).find("tr:eq(1)")
+													.nextAll("tr");
+											var time = null;//保存当前时间
+											$(trs)
+													.each(
+															function(i) {
+																if (i == 0) {
+																	time = $(
+																			this)
+																			.find(
+																					name)
+																			.text();
+																} else {
+																	if (time != null
+																			&& time != ''
+																			&& time == $(
+																					this)
+																					.find(
+																							name)
+																					.text()) {
+																		var tempTr = null;//获得临时tr
+																		$(trs)
+																				.each(
+																						function() {//找到第一个满足的tr的rowSpan的值
+																							if ($(
+																									this)
+																									.find(
+																											name)
+																									.text() == time) {
+																								$(
+																										this)
+																										.find(
+																												name)
+																										.attr(
+																												"rowSpan",
+																												parseInt($(
+																														this)
+																														.find(
+																																name)
+																														.attr(
+																																"rowSpan")) + 1);
+																							}
+																						})
+																		time = $(
+																				this)
+																				.find(
+																						name)
+																				.text();
+																		$(this)
+																				.find(
+																						name)
+																				.remove();
+																	} else {
+																		time = $(
+																				this)
+																				.find(
+																						name)
+																				.text();
+																	}
+																}
+
+															})
+										}
+									});
+				}
+			</script>
+</body>
+
+<script th:inline="javascript">
+	//上行点击添加
+	$(document).on(
+			'click',
+			'.upAdd',
+			function() {
+
+				var time = $(this).closest("tr").find("input[name=uptime]")
+						.val();//时间
+				var depart_week = getWeekNum($(this).closest("table").find(
+						".week").text());//星期几
+				layer.open({
+					type : 2,
+					title : [ '添加排班【'+[[${#strings.escapeXml(line_name)}]]+'】', 'font-size:16px;' ],
+					shadeClose : true,
+					scrollbar : false,
+					area : [ '100%', '100%' ],
+					content : '/manage/departPlanAdd?depart_dir=1&line_id='
+							+ $("#line_id").val() + '&depart_week='
+							+ depart_week+'&time='+time,
+					end : function() {
+					}
+				});
+			});
+	//下行点击添加
+	$(document).on(
+			'click',
+			'.downAdd',
+			function() {
+				var depart_week = getWeekNum($(this).closest("table").find(
+						".week").text());//星期几
+						var time = $(this).closest("tr").find("input[name=downtime]")
+						.val();//时间
+				layer.open({
+					type : 2,
+					title : [ '添加排班【'+[[${#strings.escapeXml(line_name)}]]+'】', 'font-size:16px;' ],
+					shadeClose : true,
+					scrollbar : false,
+					area : [ '100%', '100%' ],
+					content : '/manage/departPlanAdd?depart_dir=2&line_id='
+							+ $("#line_id").val() + '&&depart_week='
+							+ depart_week+'&time='+time,
+					end : function() {
+					}
+				});
+			});
+	//日期里面点击添加
+	$(document).on(
+			'click',
+			'.add',
+			function() {
+				var depart_week = getWeekNum($(this).closest("table").find(
+						".week").text());//星期几
+				layer.open({
+					type : 2,
+					title : [ '添加排班', 'font-size:16px;' ],
+					shadeClose : true,
+					scrollbar : false,
+					area : [ '100%', '100%' ],
+					content : '/manage/departPlanAdd?line_id='
+							+ $("#line_id").val() + '&depart_week='
+							+ depart_week,
+					end : function() {
+					}
+				});
+			});
+	//上行删除按钮事件
+	$(document).on(
+			'click',
+			'.upDelete',
+			function() {
+				var depart_week = getWeekNum($(this).closest("table").find(
+						".week").text());//星期几
+				var time = $(this).closest("tr").find("input[name=uptime]")
+						.val();//时间
+				var vehicle_number = $(this).closest("tr").find(".upVehicle")
+						.text();//获取车辆信息
+				var vehicle_id = $(this).closest("tr").find(
+						"input[name=upvehicleid]").val();
+
+				var j = layer.confirm('确认删除吗？', {
+					btn : [ '删除', '取消' ]
+				// 按钮
+				}, function() {
+					var i = layer.load(2);
+					$.ajax({
+						url : '/manage/deleteDepartPlan',
+						data : {
+							depart_week : depart_week,
+							time : time,
+							line_id : $("#line_id").val(),
+							depart_dir : 1,
+							vehicle_id : vehicle_id
+						},
+						dataType : 'json',
+						type : 'post',
+						success : function(data) {
+							if (!data.success) {
+								layer.msg(data.message, {
+									icon : 2,
+									time : parent.waitTime
+								}, function() {
+									layer.close(j);
+									layer.close(i);
+								});
+							} else {
+								layer.close(j);
+								layer.close(i);
+								getTableInfo(false);
+
+							}
+
+						},
+						error : function() {
+							layer.msg('服务器错误请联系管理员', {
+								icon : 2,
+								time : parent.waitTime
+							}, function() {
+								layer.close(j);
+								layer.close(i);
+							});
+						}
+					});
+
+				}, function() {
+
+				});
+
+			});
+	//下行删除按钮事件
+	$(document).on(
+			'click',
+			'.downDelete',
+			function() {
+				var depart_week = getWeekNum($(this).closest("table").find(
+						".week").text());//星期几
+				var time = $(this).closest("tr").find("input[name=downtime]")
+						.val();//时间
+				var vehicle_number = $(this).closest("tr").find(".downVehicle")
+						.text();//获取车辆信息
+				var vehicle_id = $(this).closest("tr").find(
+						"input[name=downvehicleid]").val();
+
+				var j = layer.confirm('确认删除吗？', {
+					btn : [ '删除', '取消' ]
+				// 按钮
+				}, function() {
+					var i = layer.load(2);
+					$.ajax({
+						url : '/manage/deleteDepartPlan',
+						data : {
+							depart_week : depart_week,
+							time : time,
+							vehicle_number : vehicle_number,
+							line_id : $("#line_id").val(),
+							depart_dir : 2,
+							vehicle_id : vehicle_id
+						},
+						dataType : 'json',
+						type : 'post',
+						success : function(data) {
+							if (!data.success) {
+								layer.msg(data.message, {
+									icon : 2,
+									time : parent.waitTime
+								}, function() {
+									layer.close(j);
+									layer.close(i);
+								});
+							} else {
+								layer.close(j);
+								layer.close(i);
+								getTableInfo(false);
+
+							}
+
+						},
+						error : function() {
+							layer.msg('服务器错误请联系管理员', {
+								icon : 2,
+								time : parent.waitTime
+							}, function() {
+								layer.close(j);
+								layer.close(i);
+							});
+						}
+					});
+
+				}, function() {
+
+				});
+			});
+	//查看日程
+	$("#lookSchedule").click(
+			function() {
+				window.location.href = "/manage/departRealShow?line_id="
+						+ $("#line_id").val();
+			});
+	//去修改
+	$("#toUpdate").click(function() {
+		alert(5);
+	});
+	//
+	$("#info").click(function() {
+		layer.msg(1);
+	});
+	//上行编辑点击事件
+	$(document).on(
+			'click',
+			'.upEdit',
+			function() {
+				var depart_week = getWeekNum($(this).closest("table").find(
+						".week").text());//日期
+				var time = $(this).closest("tr").find("input[name=uptime]")
+						.val();//时间
+				var vehicle_number = $(this).closest("tr").find(".upVehicle")
+						.text();//获取车辆信息
+				var driver_name = $(this).closest("tr").find(".upDriver")
+						.text();//获取司机信息
+				var vehicle_id = $(this).closest("tr").find(
+						"input[name=upvehicleid]").val();
+				var driver_id = $(this).closest("tr").find(
+						"input[name=updriverid]").val();
+
+				var i = layer.load(2);
+				layer.open({
+					type : 2,
+					title : [ '编辑排班【' +[[${#strings.escapeXml(line_name)}]]+ '】', 'font-size:16px;' ],
+					shadeClose : true,
+					scrollbar : false,
+					area : [ '100%', '100%' ],
+					content : '/manage/departPlanUpdate?depart_week='
+							+ depart_week + '&line_id=' + $("#line_id").val()
+							+ '&vehicle_number=' + vehicle_number
+							+ '&depart_dir=1' + '&driver_name=' + driver_name
+							+ '&original_vehicle_id=' + vehicle_id
+							+ '&original_driver_id=' + driver_id
+							+ '&depart_time=' + time,
+					end : function() {
+						layer.close(i);
+					}
+				});
+
+			});
+	//下行编辑点击事件
+	$(document).on(
+			'click',
+			'.downEdit',
+			function() {
+				var depart_week = getWeekNum($(this).closest("table").find(
+						".week").text());//日期
+				var time = $(this).closest("tr").find("input[name=downtime]")
+						.val();//时间
+				var vehicle_number = $(this).closest("tr").find(".downVehicle")
+						.text();//获取车辆信息
+				var driver_name = $(this).closest("tr").find(".downDriver")
+						.text();//获取司机信息
+				var vehicle_id = $(this).closest("tr").find(
+						"input[name=downvehicleid]").val();
+				var driver_id = $(this).closest("tr").find(
+						"input[name=downdriverid]").val();
+				var i = layer.load(2);
+			
+				layer.open({
+					type : 2,
+					 	
+					title : [ '编辑排班【'+[[${#strings.escapeXml(line_name)}]]+ '】', 'font-size:16px;' ],
+					shadeClose : true,
+					scrollbar : false,
+					area : [ '100%', '100%' ],
+					content : '/manage/departPlanUpdate?depart_week='
+							+ depart_week + '&line_id=' + $("#line_id").val()
+							+ '&vehicle_number=' + vehicle_number
+							+ '&depart_dir=2' + '&driver_name=' + driver_name
+							+ '&original_vehicle_id=' + vehicle_id
+							+ '&original_driver_id=' + driver_id
+							+ '&depart_time=' + time,
+					end : function() {
+						layer.close(i);
+					}
+				});
+
+			});
+</script>
+</html>

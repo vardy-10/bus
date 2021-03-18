@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>北航校车管理系统</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/common.js"></script>
+
+<style type="text/css">
+#roles button {
+	margin: 0 5px 20px 0;
+}
+</style>
+</head>
+<body style="background: url('../images/bg.png');">
+	<div class="layui-form layui-form-pane" id="bodyDiv"
+		lay-filter="showOne_form"
+		style="width: 500px; position: absolute; top: 100px; left: 50%; transform: translate(-50%, -10%);">
+		<table class="layui-table" lay-skin="nob" style="background: none;">
+			<tr>
+				<td align="right" width="100px">所属线路</td>
+				<td th:text="${#strings.escapeXml(lineName)}"></td>
+			</tr>
+			<tr>
+				<td align="right" width="100px">车辆编号</td>
+				<td id="log_time" th:text="${#strings.escapeXml(busVehicle.vehicle_number)}"></td>
+			</tr>
+			<tr>
+				<td align="right" width="100px">车牌</td>
+				<td id="log_time" th:text="${#strings.escapeXml(busVehicle.license_plate)}"></td>
+			</tr>
+			<tr>
+				<td align="right" width="100px">座位数</td>
+				<td id="log_time" th:text="${#strings.escapeXml(busVehicle.seat_num)}"></td>
+			</tr>
+			<tr>
+				<td align="right" width="100px">定位仪编号</td>
+				<td id="log_time" th:text="${#strings.escapeXml(busVehicle.device1_number)}"></td>
+			</tr>
+			<tr>
+				<td align="right" width="100px">售票仪编号</td>
+				<td id="log_time" th:text="${#strings.escapeXml(busVehicle.device2_number)}"></td>
+			</tr>
+			<tr>
+				<td align="right" width="100px">是否启用</td>
+				<td id="log_time" th:if="${1 == busVehicle.is_enable}">启用</td>
+				<td id="log_time" th:if="${1 != busVehicle.is_enable}">未启用</td>
+			</tr>
+		</table>
+		
+	</div>
+</body>
+</html>

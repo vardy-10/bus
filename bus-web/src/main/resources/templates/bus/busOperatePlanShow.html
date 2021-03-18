@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>北航校车管理系统</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/bus/busOperatePlanShow.js"></script>
+<script src="../../js/common.js"></script>
+<script type="text/javascript "
+	src="../../static/js/jquery-1.9.1.min.js"></script>
+<style type="text/css">
+.layui-btn-container div {
+	float: left;
+}
+.layui-block{
+margin: 10px 10px 0px 20px;
+}
+.layui-inline {
+	margin: 10px 10px 0px 20px;
+}
+.layui-form-label{
+width: 150px!important;
+}
+#btn {
+	margin: 10px 0px 0px 20px;
+}
+.layui-form-pane .layui-form-checkbox {
+	margin: 4px 10px 4px 10px;
+}
+ /*不显示秒*/
+            .layui-laydate-content>.layui-laydate-list {
+                padding-bottom: 0px;
+                overflow: hidden;
+            }
+            .layui-laydate-content>.layui-laydate-list>li{
+                width:50%
+            }
+ 
+            .merge-box .scrollbox .merge-list {
+                padding-bottom: 5px;
+            }
+           /*设置时间框  */
+          
+           .layui-input-inline>input{
+           width:200px!important;
+           }
+            #time2,#time3{
+            width: 90px!important;
+           }
+</style>
+
+</head>
+<body>
+	<fieldset th:if="${#strings.isEmpty(act)}" class="layui-elem-field layui-field-title"
+		style="margin-top: 20px;">
+		<legend>运营计划</legend>
+	</fieldset>
+	<fieldset 	th:if="${act=='publish'}" class="layui-elem-field layui-field-title"
+		style="margin-top: 20px;">
+		<legend>发布计划</legend>
+	</fieldset>
+
+	<input id="act" type="hidden" th:value=${act}>
+	<form class="layui-form layui-form-pane">
+		<div class="layui-form" id="searchForm">
+
+			<div class="layui-block">
+				<label class="layui-form-label">选定排班日期</label>
+				<div class="layui-input-inline">
+					<input type="text" name="shifts_date" readonly="readonly"
+						autocomplete="off" class="layui-input" id="test1" th:value='${#strings.escapeXml(nextMonday)}'>
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">发车时间</label>
+				<div class="layui-input-inline">
+				<input type="text" class="layui-input" id="time2" placeholder=""
+					name="time" autocomplete="off">
+			</div>
+                  至
+					<div class="layui-input-inline">
+				<input type="text" class="layui-input" id="time3" placeholder=""
+					name="time" autocomplete="off" >
+			</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">司机</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="driver_name" placeholder="根据司机姓名查询"
+						name="driver_name">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">线路</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="line_name" placeholder="根据线路名查询"
+						name="line_name">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">始发站</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="up_origin_name" placeholder="根据始发站名查询"
+						name="up_origin_name">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">车辆</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="vehicle_number" placeholder="根车辆编号查询"
+						name="vehicle_number">
+				</div>
+			</div>
+			<button class="layui-btn" lay-submit lay-filter="searchBtn" id="btn">
+				<i class="layui-icon layui-icon-search"></i>
+			</button>
+		</div>
+	</form>
+	<table class="layui-hide" id="test" lay-filter="test"></table>
+
+	<div >
+		<div id="limit-page"></div>
+		<div  th:if="${#strings.isEmpty(act)}" style="float: right; margin-top: 10px;margin-left: 20px;">
+			<button class="layui-btn layui-btn-sm" id="addFlight">添加</button>
+		</div>
+		<div th:if="${#strings.isEmpty(act)}" style="float: right; margin-top: 10px;margin-left: 20px;">
+			<button class="layui-btn layui-btn-sm" id="importFlight">导入模板</button>
+		</div>
+		
+		<div th:if="${#strings.isEmpty(act)}" style="float: right; margin-top: 10px;margin-left: 20px;">
+			<button class="layui-btn layui-btn-sm" id="copyFlight">拷贝班次</button>
+		</div>
+		<div th:if="${act=='copy'}" style="float: right; margin-top: 10px;margin-left: 20px;height: 38px;">
+		 
+		  <div class="layui-form  layui-form-pane" >
+          <div class="layui-form-item">
+           <div class="layui-inline" id="tip" style="margin-top: 0px;margin-bottom: 0px;">
+				<label class="layui-form-label" style=" width:110px!important;">拷贝到</label>
+				<div class="layui-input-inline" style="width: 120px;">
+					<input type="text"  id="test2" name="up_origin_name" readonly="readonly" placeholder="请选择拷贝日期"
+						autocomplete="off" class="layui-input" style=" width:120px!important;" >
+				</div>
+			</div>
+        
+      
+     
+       	<button class="layui-btn layui-btn-sm" id="startCopy" style="height: 38px;" >开始拷贝</button>
+       	 <button class="layui-btn layui-btn-sm" id="cancel" style="height: 38px;">取消</button>
+    
+    </div>
+</div>
+</div>
+		
+		<div  th:if="${act=='publish'}" style="float: right; margin-top: 10px;margin-left: 20px;">
+			<button class="layui-btn layui-btn-sm" id="publishFlight">发布计划</button>
+		</div>
+	</div>
+	<script type="text/html" id="barDemo">
+  		<a class="layui-btn layui-btn-xs" lay-event="update" >编辑</a>
+  		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+	</script>
+
+</body>
+</html>

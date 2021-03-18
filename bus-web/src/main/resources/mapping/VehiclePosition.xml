@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.VehiclePositionDao">
+	<sql id="tableName">sbus_vehicle_position</sql>
+	<select id="select" resultType="com.zah.entity.VehiclePosition"
+		parameterType="String">
+		SELECT ${otherMap.column} FROM
+		<include refid="tableName" />
+		<if test="otherMap.join!=null">${otherMap.join}</if>
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+		<if test="otherMap.group!=null">GROUP BY ${otherMap.group}</if>
+		<if test="otherMap.order!=null">ORDER BY ${otherMap.order}</if>
+		<if test="otherMap.limit!=null">LIMIT ${otherMap.limit}</if>
+	</select>
+	<insert id="insert" parameterType="String">
+		INSERT INTO
+		<include refid="tableName" />
+		SET
+		<foreach collection="setMap" index="key" item="value"
+			separator=",">
+			${key}=#{value}
+		</foreach>
+	</insert>
+	<update id="update" parameterType="String">
+		UPDATE
+		<include refid="tableName" />
+		SET
+		<foreach collection="setMap" index="key" item="value"
+			separator=",">
+			${key}=#{value}
+		</foreach>
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+	</update>
+	<delete id="delete" parameterType="String">
+		DELETE FROM
+		<include refid="tableName" />
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+	</delete>
+
+	<select id="getCountBy" resultType="Integer">
+		SELECT COUNT(*) FROM sbus_vehicle_position l left join sbus_vehicle a
+		on l.vehicle_id=a.vehicle_id WHERE 1=1
+		<if test="columnMap.vehicle_number!=null">AND a.vehicle_number=#{columnMap.vehicle_number}
+		</if>
+		<if test="columnMap.startTime!=null">AND <![CDATA[ l.log_time>=#{columnMap.startTime} ]]>
+		</if>
+		<if test="columnMap.endTime!=null">AND <![CDATA[l.log_time<=#{columnMap.endTime}]]>
+		</if>
+	</select>
+	<select id="selectVehicle" resultType="com.zah.entity.VehiclePosition"
+		parameterType="String">
+		SELECT l.log_time,l.longitude,l.latitude,line_id,vehicle_number FROM
+		sbus_vehicle_position l left join sbus_vehicle a ON
+		l.vehicle_id=a.vehicle_id
+		where 1=1
+		<if test="columnMap.vehicle_number!=null">AND a.vehicle_number=#{columnMap.vehicle_number}
+		</if>
+		<if test="columnMap.startTime!=null">AND <![CDATA[l.log_time>=#{columnMap.startTime} ]]>
+		</if>
+		<if test="columnMap.endTime!=null">AND <![CDATA[l.log_time<=#{columnMap.endTime}]]>
+		</if>
+		ORDER BY log_time DESC,l.vehicle_id DESC
+		<if test="offset>=0 and size>=0">limit #{offset}, #{size}</if>
+	</select>
+
+</mapper>

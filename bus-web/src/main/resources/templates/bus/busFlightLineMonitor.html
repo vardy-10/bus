@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>北航校车管理系统</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/bus/busOperatePlanShow.js"></script>
+<script src="../../js/common.js"></script>
+<script type="text/javascript "
+	src="../../static/js/jquery-1.9.1.min.js"></script>
+
+<style type="text/css">
+.layui-btn-container div {
+	float: left;
+}
+
+.layui-block {
+	margin: 10px 10px 0px 20px;
+}
+
+.layui-inline {
+	margin: 10px 10px 0px 20px;
+}
+
+.layui-form-label {
+	width: 120px !important;
+}
+
+#btn {
+	margin: 10px 0px 0px 20px;
+}
+
+.layui-form-pane .layui-form-checkbox {
+	margin: 4px 10px 4px 10px;
+}
+</style>
+
+</head>
+<body>
+	<fieldset class="layui-elem-field layui-field-title"
+		style="margin-top: 20px;">
+		<legend>线路班车监控</legend>
+	</fieldset>
+	<input id="temp" type="hidden">
+	<form class="layui-form layui-form-pane">
+		<div class="layui-form" id="searchForm">
+
+			<div class="layui-inline">
+				<label class="layui-form-label">线路</label>
+				<div class="layui-input-inline">
+					<select name="driver_id" lay-filter="aihao" style="width: 360px;"
+						id="driver_id">
+						<option value="0">请选择</option>
+						<option th:each="lineList:${lineList}"
+							th:value="${lineList['line_id']}"
+							th:text="${lineList['line_name']}"></option>
+
+					</select>
+				</div>
+			</div>
+			<button class="layui-btn" lay-submit lay-filter="searchBtn" id="btn">
+				<i class="layui-icon layui-icon-search"></i>
+			</button>
+		</div>
+	</form>
+	<!--线路地图区域-->
+	<div id="box" style="width: 100%; height: 550px; margin: 10px auto"></div>
+	<script type="text/javascript"
+	src="http://api.map.baidu.com/api?v=2.0&ak=mWReOfrrGXwvdAqjooRdb8v1"></script>
+	<script type="text/javascript">
+		var ajax;
+		var loadTime = 6 * 1000;//等待加载时间单位ms
+		/* var vehicleRefreshTime = 2 * 1000; *///车辆刷新时间单位ms
+		var turnAfter = new Array();
+		var turnFront = new Array();
+		var markers = new Array();
+		var vehicleInfo=new Array();
+		var index = 0;//需要转换点的个数
+		var flag = true;
+		var timer;
+		var j;
+		// 百度地图API功能
+		var map = new BMap.Map("box"); // 创建Map实例
+		map.centerAndZoom("北京", 5); // 初始化地图,设置中心点坐标和地图级别
+		map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+		// form表单的提交事件
+		layui.use('form', function() {
+			var $ = layui.jquery;
+			var form = layui.form;
+			$("#box").height($(window).height() - 135);
+			window.onresize = function() {
+				$("#box").height($(window).height() - 135);
+			}
+			// 监听"查询条件表单"的提交事件
+			$("#btn").click(function() {
+                 
+				turnAfter = new Array();
+				turnFront = new Array();
+				index = 0;
+				markers = new Array();
+				flag = true;
+			
+				//获得所选的线路id
+				var line_id = $("#driver_id").val();
+				if(line_id==0){
+					layer.msg('请选择线路！', {
+						icon : 7,
+						time : parent.waitTime
+					}, function() {
+					
+					});
+					return;
+				}
+				if(timer){
+					clearInterval(timer);
+				}
+				if (ajax) {
+					ajax.abort();
+				}
+				//发送ajax请求
+				ajax = $.ajax({
+					type : "POST",
+					url : "getlinePoint",
+					data : {
+						'line_id' : line_id
+					},
+					dataType : "json",
+					success : function(data) {
+						
+						if (!data.success) {
+							
+							layer.msg(data.message, {
+								icon : 2,
+								time : parent.waitTime
+							}, function() {
+
+							});
+						} else {
+							map.clearOverlays();
+							if(!data.up_lines_point.length>0){
+								layer.msg("无线路轨迹数据");
+								
+							}else{
+								showLine(data.up_lines_point);
+
+								showVehicle();
+								timer=setInterval('showVehicle()',data.vehicleRefreshTime);
+							}
+				
+							
+						}
+						
+					},
+					error : function(e) {
+						console.log('网络不正常,请稍后再试!');
+					}
+				});
+
+			});
+
+		});
+		// //将接收的后台经纬度拆分为数组
+		function getLongAndLat(data) {
+			var longAndLatArr = data.split("|");
+			var pointArr = [];
+			for (var i = 0; i < longAndLatArr.length; i++) {
+				if (!longAndLatArr[i]) {
+					continue;
+				}
+				pointArr[i] = new BMap.Point(longAndLatArr[i].split("-")[0],
+						longAndLatArr[i].split("-")[1]);
+			}
+			return pointArr;
+		}
+
+		//显示路线图在地图上
+		function showLine(data) {
+			 j=layer.load(2);
+			turnFront = getLongAndLat(data);
+			index = turnFront.length;
+			changeLongAndLatBaidu(turnFront);
+		}
+		//显示车辆
+		function showVehicle() {
+			if (!flag) {
+				clearInterval(timer);
+				$
+						.ajax({
+							type : "POST",
+							url : "getLngLat",
+							data : {
+								'line_id' : $("#driver_id").val()
+							},
+							dataType : "json",
+							success : function(data) {
+								if (!data.success) {
+									layer.close(i);
+								
+								} else {
+									var tempData = '';
+									if(!data.vehicleLngLat.length>0){
+										return;
+									}
+									$(data.vehicleLngLat)
+											.each(
+													function(i) {
+														
+														
+														vehicleInfo.push({'vehicle_number':this.vehicle_number,'is_online':this.is_online==1?'在线':'离线'});
+														if (i == 0) {
+															tempData += (this.longitude
+																	+ '-' + this.latitude);
+														} else {
+															tempData += ('|'
+																	+ this.longitude
+																	+ '-' + this.latitude);
+														}
+													});
+									turnFront = getLongAndLat(tempData);
+									index = turnFront.length;
+									changeLongAndLatBaidu(turnFront);
+								}
+								
+							},
+							error : function(e) {
+								console.log(e);
+							}
+						});
+			}
+		}
+		//转换百度经纬度方法
+		function changeLongAndLatBaidu(turnFront) {
+			if (turnFront.length <= 0) {
+				return;
+			}
+			var turn = new Array();//要转换的经纬度
+			turn = [];
+			for (var i = 0; i < 10; i++) {
+				if (!turnFront[i]) {
+					continue;
+				}
+				turn[i] = turnFront[i];
+			}
+			turnFront.splice(0, 10);
+			translateCallback = function(data) {
+				if (data.status === 0) {
+					callbackChangeLongAndLatBaidu(data.points);
+				}
+			}
+			var convertor = new BMap.Convertor();
+			convertor.translate(turn, 1, 5, translateCallback);
+		}
+		//转换百度经纬度回调方法
+		function callbackChangeLongAndLatBaidu(pois) {
+			for (var i = 0; i < pois.length; i++) {
+				turnAfter.push(pois[i]);
+			}
+			if (turnAfter.length === index) {
+
+				if (flag) {
+					flag = false;
+					//调整最佳视野
+					map.setViewport(turnAfter);
+					//调用画线方法
+					drawLine1(turnAfter, "#18a45b");
+					markerStartEnd(turnAfter);
+					layer.close(j);
+				} else {
+
+					markerVehicle(turnAfter);
+				}
+				turnAfter = [];
+				turnFront = [];
+
+			} else {
+				//循环调用转换方法
+				changeLongAndLatBaidu(turnFront);
+			}
+		}
+		//转换百度经纬度后画线方法(区别在于转换后没有清空覆盖物，需要先清除之前转换后线)
+		function drawLine1(pointArr, color) {
+			var polyline = new BMap.Polyline(pointArr, {
+				enableEditing : false,//是否启用线编辑，默认为false
+				enableClicking : true,//是否响应点击事件，默认为true
+				strokeWeight : '8',//折线的宽度，以像素为单位
+				strokeOpacity : 0.8,//折线的透明度，取值范围0 - 1
+				strokeColor : color
+			//折线颜色
+			});
+			map.addOverlay(polyline);//增加折线
+		}
+		//添加车辆标注方法
+		function markerVehicle(pointArr) {
+			if (markers.length > 0) {
+				for (var j = 0; j < markers.length; j++) {
+					map.removeOverlay(markers[j]);
+				}
+			}
+			markers = [];
+			for (var i = 0; i < pointArr.length; i++) {
+				var point = new BMap.Point(pointArr[i]);
+				//创建标注
+				var marker = new BMap.Marker(pointArr[i]);
+				//添加标注
+					var label = new BMap.Label(vehicleInfo[i].vehicle_number+' '+vehicleInfo[i].is_online,{offset:new BMap.Size(20,-10)});
+					marker.setLabel(label);
+				map.addOverlay(marker);
+				markers.push(marker);
+
+			}
+		}
+		//添加起点终点标注方法
+		function markerStartEnd(pointArr) {
+			var starticon = new BMap.Icon('../../static/images/start.png',
+					new BMap.Size(28, 37), {
+						anchor : new BMap.Size(15, 40),
+						imageSize : new BMap.Size(28, 37)
+					// 引用图片实际大小
+					});
+			var endicon = new BMap.Icon('../../static/images/end.png',
+					new BMap.Size(28, 37), {
+						anchor : new BMap.Size(15, 40),
+						imageSize : new BMap.Size(28, 37)
+					// 引用图片实际大小
+					});
+			var point = new BMap.Point(pointArr[0]);
+			//创建标注
+			var marker = new BMap.Marker(pointArr[0], {
+				icon : starticon
+			});
+			//添加标注
+			map.addOverlay(marker);
+			var point1 = new BMap.Point(pointArr[pointArr.length - 1]);
+			//创建标注
+			var marker1 = new BMap.Marker(pointArr[pointArr.length - 1], {
+				icon : endicon
+			});
+			//添加标注
+			map.addOverlay(marker1);
+		};
+	</script>
+
+</body>
+
+</html>

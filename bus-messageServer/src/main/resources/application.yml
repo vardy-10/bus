@@ -1,0 +1,20 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: messageServer
+  rabbitmq:
+    username: guest
+    password: guest
+    host: 119.29.137.92
+    listener:
+      simple:
+        acknowledge-mode: manual
+  datasource:
+    url: jdbc:mysql://119.29.137.92:3306/schoolbus_beihang?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:mapping/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  type-aliases-package: com.zah.entity

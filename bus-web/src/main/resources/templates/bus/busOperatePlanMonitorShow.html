@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>北航校车管理系统</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/bus/busOperatePlanMonitorShow.js"></script>
+<script src="../../js/common.js"></script>
+<script type="text/javascript "
+	src="../../static/js/jquery-1.9.1.min.js"></script>
+<style type="text/css">
+.layui-btn-container div {
+	float: left;
+}
+
+.layui-block {
+	margin: 10px 10px 0px 20px;
+}
+
+.layui-inline {
+	margin: 10px 10px 0px 20px;
+}
+
+.layui-form-label {
+	width: 150px !important;
+}
+
+#btn {
+	margin: 10px 0px 0px 20px;
+}
+
+.layui-form-pane .layui-form-checkbox {
+	margin: 4px 10px 4px 10px;
+}
+/*不显示秒*/
+.layui-laydate-content>.layui-laydate-list {
+	padding-bottom: 0px;
+	overflow: hidden;
+}
+
+.layui-laydate-content>.layui-laydate-list>li {
+	width: 50%
+}
+
+.merge-box .scrollbox .merge-list {
+	padding-bottom: 5px;
+}
+/*设置时间框  */
+.layui-input-inline>input {
+	width: 200px !important;
+}
+
+#time2, #time3 {
+	width: 90px !important;
+}
+/*对照信息栏  */
+.topTittle {
+	height: 40px;
+	margin-top: 10px;
+	font-size: 18px;
+}
+
+.topTittle>div {
+	font-weight: 500;
+	height: 40px;
+	line-height: 40px;
+	float: left;
+	text-align: center;
+	width: 50%;
+}
+
+.time {
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	width: 160px !important;
+	text-align: center;
+	height: 40px;
+	line-height: 40px;
+	color: rgba(255, 255, 255, 0.8);
+	background-color: rgba(117, 178, 75, 1);
+}
+/* 
+.planInfo {
+	height: 20px;
+	clear: both;
+}
+
+.planInfo>div {
+	margin-top: 10px;
+	width: 48%;
+	text-align: center;
+}
+
+.operatePlan .plan_1>div {
+	padding: 1px 0px;
+	display: inline-block;
+	width: 100px;
+	
+	text-align: center;
+}
+
+.operatePlan  .plan_1 {
+	outline: 1px solid black;
+	background-color: rgba(189, 215, 238, 1);
+	margin-top: 10px;
+}
+
+.operatePlan  .plan_1>div>div {
+	overflow: hidden;
+	margin-top: 5px;
+	width: 100px;
+	height: 26px;
+	line-height: 26px;
+}
+
+.actualPlan  .plan_1>div>div {
+	overflow: hidden;
+	margin-top: 5px;
+	width: 100px;
+	height: 26px;
+	line-height: 26px;
+}
+
+.operatePlan   .plan_1>div>div:first-child {
+	font-weight: bold;
+} */
+
+/* .planInfo  .operatePlan {
+	float: left;
+	margin-left: 10px;
+	text-align: left;
+} */
+/* 
+.actualPlan  .plan_1 {
+	background-color: rgba(167, 210, 138, 1);
+	margin-top: 10px;
+}
+
+.actualPlan  .plan_1>div {
+	padding: 1.5px 0px;
+	display: inline-block;
+	width: 100px;
+	height: 50px;
+	text-align: center;
+}
+
+.actualPlan  .plan_1>div>div {
+	margin-top: 5px;
+}
+
+.actualPlan  .plan_1>div>div:first-child {
+	font-weight: bold;
+}
+
+.planInfo   .actualPlan {
+	float: right;
+	margin-right: 10px;
+	
+	text-align: left;
+} */
+/*显示特别状态*/
+.special{
+color:red;
+}
+.planInfo {
+width: 99%;
+margin: 20px auto;
+}
+.planInfo table tr{
+display: block;
+margin-top: 10px;
+}
+.planInfo .info_left{
+background-color: rgba(189, 215, 238, 1);
+}
+.planInfo .info_left>div{
+float:left;
+width: 120px;
+overflow: hidden;
+height: 52px;
+}
+.planInfo .info_left>div>div{
+height: 26px;
+line-height: 26px;
+}
+.planInfo .info_right{
+background-color: rgba(189, 215, 238, 1);
+}
+.planInfo .info_right>div{
+float:left;
+width: 120px;
+overflow: hidden;
+height: 52px;
+}
+.planInfo .info_right>div>div{
+height: 26px;
+line-height: 26px;
+}
+.planInfo .info_right{
+background-color: rgba(167, 210, 138, 1);
+}
+.info_left,.info_right{
+width: 48%;
+}
+.blanck{
+width: 4%;
+}
+</style>
+
+</head>
+<body>
+	<fieldset class="layui-elem-field layui-field-title"
+		style="margin-top: 20px;">
+		<legend>运营计划偏差监控</legend>
+	</fieldset>
+	<input id="temp" type="hidden">
+	<form class="layui-form layui-form-pane">
+		<div class="layui-form" id="searchForm">
+
+			<div class="layui-inline">
+				<label class="layui-form-label">日期</label>
+				<div class="layui-input-inline">
+					<input type="text" name="shifts_date" placeholder="默认当前日期"
+						autocomplete="off" class="layui-input" id="shifts_date"  th:value=${nowDate}>
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">班次</label>
+				<div class="layui-input-inline">
+					<input type="text" name="shifts_number" placeholder="根据班次查询"
+						autocomplete="off" class="layui-input" id="shifts_number">
+					
+				</div>
+			</div>
+		<!-- 	<div class="layui-inline">
+				<label class="layui-form-label">司机</label>
+				<div class="layui-input-inline">
+					<input type="text" name="driver_name" placeholder="根据司机查询"
+						autocomplete="off" class="layui-input" id="driver_name"> 
+
+				</div>
+			</div> -->
+			<div class="layui-inline">
+				<label class="layui-form-label">线路</label>
+				<div class="layui-input-inline" style="width: 200px;">
+					<select  lay-filter="aihao" 
+						id="line_id" name="line_id">
+					<option value="">请选择</option>
+					<option th:each="lineList:${lineList}"
+						th:value="${lineList['line_id']}"
+						th:text="${lineList['line_name']}"></option>
+
+					</select>
+				</div>
+			</div>
+		<!-- 	<div class="layui-inline">
+				<label class="layui-form-label">线路</label>
+				<div class="layui-input-inline">
+					<input type="text" name="line_name" placeholder="根据线路查询"
+						autocomplete="off" class="layui-input" id="line_name"> <input
+						type="hidden" name="linename">
+				</div>
+			</div> -->
+
+			<!-- <div class="layui-inline">
+				<label class="layui-form-label">始发站</label>
+				<div class="layui-input-inline">
+					<input type="text" name="up_origin_name" placeholder="根据始发站搜索"
+						autocomplete="off" class="layui-input" id="up_origin_name">
+					
+				</div>
+			</div> -->
+			<!-- <div class="layui-inline">
+				<label class="layui-form-label">车辆</label>
+				<div class="layui-input-inline">
+					<input type="text" name="vehicle_number" placeholder="根据车辆查询"
+						autocomplete="off" class="layui-input" id="vehicle_number">
+					
+				</div>
+			</div> -->
+			<button class="layui-btn" lay-submit lay-filter="searchBtn" id="btn">
+				<i class="layui-icon layui-icon-search"></i>
+			</button>
+		</div>
+	</form>
+	<!--运营计划和实际发车对照表-->
+	<div>
+		<div class="topTittle">
+			<div>运营计划</div>
+			<div class="time"  th:text=${nowTime} id="nowTime"></div>
+			<div>实际发车</div>
+		</div>
+       <!-- <div class="operatePlan">
+			</div>
+			<div class="actualPlan">
+			</div> -->
+		<div class="planInfo">
+			<table style="width: 100%;text-align: center;">
+			
+			</table>
+		</div>
+		
+		<div id="showInfo" class="layui-table-body layui-table-main" style="border: 1px solid rgba(0,0,0,0.1);;width: 99%;margin: 20px auto">
+			<div class="layui-none">请选择线路或者班次</div>
+		</div>
+		<!--分页-->
+		<div
+			style="text-align: left; margin-top: 10px; clear: both; margin-left: 10px">
+			<div id="demo7" style=""></div>
+		</div>
+	</div>
+	</script>
+</body>
+</html>

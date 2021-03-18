@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>添加管理员 - 北航校车管理系统</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script type="text/javascript" src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/verify.js"></script>
+<script src="../../js/xm-select.js"></script>
+<script src="../../js/bus/busDriverUpdate.js"></script>
+<script src="../../js/common.js"></script>
+</head>
+<body style="background: url('../images/bg.png'); text-align: center;">
+	<form class="layui-form layui-form-pane"
+		style="width: 400px; margin: 100px auto;" lay-filter="example">
+		<div class="layui-form-item" style="display: none;">
+			<label class="layui-form-label">司机id</label>
+			<div class="layui-input-block">
+				<input type="hidden" name="driver_id" autocomplete="off"
+					class="layui-input" th:value="${#strings.escapeXml(busDriver.driver_id)}">
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">编号</label>
+			<div class="layui-input-block">
+				<input type="text" name="driver_number" placeholder="请输入20位以内的司机编号"
+					autocomplete="off" class="layui-input"
+					th:value="${#strings.escapeXml(busDriver.driver_number)}">
+			</div>
+		</div>
+		<div class="layui-form-item" >
+			<label class="layui-form-label">姓名</label>
+			<div class="layui-input-block">
+				<input type="text" name="driver_name" placeholder="请输入10位以内的司机姓名"
+					autocomplete="off" class="layui-input"
+					th:value="${#strings.escapeXml(busDriver.driver_name)}">
+			</div>
+		</div>
+
+		<div class="layui-form-item" pane="">
+			<label class="layui-form-label">性别</label>
+			<div class="layui-input-block">
+				<input type="radio" name="driver_sex" value="1" title="男"
+					th:checked="${busDriver.driver_sex==1}?true:false"
+					lay-filter="jiedian"> <input type="radio" name="driver_sex"
+					value="2" th:checked="${busDriver.driver_sex==2}?true:false"
+					title="女" lay-filter="jiedian">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">电话</label>
+			<div class="layui-input-block">
+				<input type="text" name="driver_phone" placeholder="请输入30位以内的司机电话"
+					autocomplete="off" class="layui-input"
+					th:value="${#strings.escapeXml(busDriver.driver_phone)}">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">身份证号</label>
+			<div class="layui-input-block">
+				<input type="text" name="driver_identity"
+					placeholder="请输入20位以内的司机身份证号" autocomplete="off"
+					class="layui-input" th:value="${#strings.escapeXml(busDriver.driver_identity)}">
+			</div>
+		</div>
+
+
+
+
+		<!-- <div id="demo1" class="xm-select-demo"></div> -->
+
+
+		<div class="layui-form-item">
+			<button class="layui-btn" lay-submit lay-filter="upp_sub" id="btnUpp">确认修改</button>
+			<input type="reset" class="layui-btn layui-btn-primary"
+				id="resetForm"></input>
+		</div>
+	</form>
+</body>
+</html>

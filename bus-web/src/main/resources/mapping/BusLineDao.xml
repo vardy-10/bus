@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.BusLineDao">
+	<select id="getCountBy" resultType="Integer">
+		SELECT COUNT(line_id) FROM sbus_line WHERE 1=1
+		<if test="columnMap.line_name!=null">AND line_name LIKE CONCAT('%',#{columnMap.line_name},'%')
+		</if>
+
+	</select>
+	<select id="getBusLineList" resultType="com.zah.entity.BusLine">
+		SELECT line_id,line_name,line_type FROM sbus_line WHERE 1=1
+		<if test="columnMap.line_name!=null">AND line_name LIKE CONCAT('%',#{columnMap.line_name},'%')
+		</if>
+		ORDER BY line_id DESC limit #{offset},#{size}
+	</select>
+	<select id="selectInfoByKey" resultType="com.zah.entity.BusLine"
+		parameterType="String">
+		SELECT ${columns} FROM sbus_line WHERE ${key}=#{value}
+	</select>
+	<delete id="deleteBusLine" parameterType="String">
+		DELETE FROM sbus_line
+		WHERE line_id=#{line_id}
+	</delete>
+	<delete id="delStationByLineId" parameterType="String">
+		DELETE FROM
+		sbus_station WHERE line_id=#{line_id}
+	</delete>
+	<insert id="addBusLine" parameterType="String">
+		INSERT INTO
+		sbus_line(line_name,line_type,up_lines_point,down_lines_point) VALUES
+		(#{line_name},#{line_type},'','')
+	</insert>
+	<update id="editBusLine" parameterType="com.zah.entity.BusLine">
+		UPDATE sbus_line SET
+		<if test="line_name!=null and line_name!=''">line_name=#{line_name},</if>
+		<if test="line_type!=null">line_type=#{line_type}</if>
+		WHERE line_id=#{line_id}
+	</update>
+	<update id="updateLineInfo" parameterType="String">
+		UPDATE sbus_line set
+		down_origin_name='',down_terminal_name='',down_lines_point=''
+		WHERE
+		line_id=#{line_id}
+	</update>
+	<update id="updateSbusLineBy" parameterType="String">
+		UPDATE sbus_line set
+		${key}=#{value}
+		WHERE line_id=#{line_id}
+	</update>
+	<delete id="delStationOfLine" parameterType="String">
+		DELETE FROM sbus_line WHERE line_id=#{line_id} and station_dir=2
+	</delete>
+		<update id="updateOriginName" parameterType="String">
+		UPDATE sbus_line set
+		${origin_name}=#{value},${terminal_name}=#{value}
+		WHERE line_id=#{line_id}
+	</update>
+		<update id="updateLineBykey" parameterType="String">
+		UPDATE sbus_line SET 
+		<trim prefixOverrides=",">
+		<if test="columnMap.up_origin_name!=null">,up_origin_name=#{columnMap.up_origin_name}</if>
+		<if test="columnMap.up_terminal_name!=null">,up_terminal_name=#{columnMap.up_terminal_name}</if>
+		<if test="columnMap.down_origin_name!=null">,down_origin_name=#{columnMap.down_origin_name}</if>
+		<if test="columnMap.down_terminal_name!=null">,down_terminal_name=#{columnMap.down_terminal_name}</if>
+		<if test="columnMap.up_lines_point!=null">,up_lines_point=#{columnMap.up_lines_point}</if>
+		<if test="columnMap.down_lines_point!=null">,down_lines_point=#{columnMap.down_lines_point}</if>
+		</trim>
+		WHERE ${key}=#{value}
+	</update>
+	<select id="selectLineList" parameterType="String"  resultType="com.zah.entity.BusLine">
+	SELECT ${columns} FROM sbus_line;
+	</select>
+	
+</mapper>

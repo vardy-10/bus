@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>北航校车管理系统</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/verify.js"></script>
+<script src="../../js/xm-select.js"></script>
+<script src="../../js/bus/busStationAdd.js"></script>
+<script src="../../js/common.js"></script>
+<style type="text/css">
+.layui-form-pane .layui-form-checkbox {
+	margin: 4px 10px 4px 10px;
+}
+/* lay-verify="required|username" */
+</style>
+</head>
+<body style="background: url('../images/bg.png'); text-align: center;">
+	<form class="layui-form layui-form-pane"
+		style="width: 400px; margin: 100px auto;">
+		<div class="layui-form-item">
+			<label class="layui-form-label">车站名</label>
+			<div class="layui-input-block">
+				<input type="text" name="station_name" placeholder="请输入50位以内的车站名"
+					autocomplete="off" class="layui-input"> <input
+					type="hidden" name="line_id" class="layui-input" id="line_id"
+					th:value="${#strings.escapeXml(line_id)}">
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">车站方向</label>
+			<div class="layui-input-block">
+				<input type="radio" name="station_dir" value="1" title="上行或单向"
+					checked="checked" > <input type="radio"
+					name="station_dir" value="2" title="下行" th:if="${busline.line_type} eq '2'">
+			</div>
+		</div>
+		
+		<div class="layui-form-item">
+			<label class="layui-form-label">车站顺序号</label>
+			<div class="layui-input-inline">
+				<input type="text" name="station_order" placeholder="请输入数字类型的顺序号"
+					autocomplete="off" class="layui-input" >
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">车站半径</label>
+			<div class="layui-input-inline">
+				<input type="text" name="radius" placeholder="车站半径单位为（米）"
+					autocomplete="off" class="layui-input" value="50">
+			</div>
+			<div class="layui-form-mid layui-word-aux">（米）</div>
+		</div>
+		<!-- <div id="demo1" class="xm-select-demo"></div> -->
+
+
+		<div class="layui-form-item">
+			<button class="layui-btn" lay-submit lay-filter="add_sub" id="btnAdd">确认添加</button>
+			<input type="reset" class="layui-btn layui-btn-primary"
+				id="resetForm"></input>
+		</div>
+	</form>
+	<script type="text/javascript">
+		
+	</script>
+</body>
+</html>

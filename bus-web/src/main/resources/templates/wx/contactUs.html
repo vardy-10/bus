@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<title>投诉建议</title>
+		<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	</head>
+	<style>
+		#info{
+			height: 170px!important;
+		}
+	</style>
+	<body>
+		<div data-role="page" id="pageone">
+		  <div data-role="header">
+		    <h1>联系我们</h1>
+		  </div>
+		
+		  <div data-role="content">
+		     <form method="post" id="opinionForm" action="opinion" data-ajax="false">
+		           <div class="ui-field-contain">
+		            <label for="info">联系我们，请在线留言</label>
+		            <textarea name="addinfo" id="info" placeholder="输入框"	></textarea>
+		          </div>
+		          <input type="submit" data-inline="false" value="提交">
+		        </form> 
+		  </div> 
+		</div>
+	</body>
+</html>

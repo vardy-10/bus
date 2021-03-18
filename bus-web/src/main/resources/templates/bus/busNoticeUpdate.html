@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script type="text/javascript" src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/verify.js"></script>
+<script src="../../js/xm-select.js"></script>
+<script src="../../js/bus/busNoticeUpdate.js"></script>
+<script src="../../js/common.js"></script>
+</head>
+<body style="background: url('../images/bg.png'); text-align: center;">
+	<form class="layui-form layui-form-pane"
+		style="width: 400px; margin: 100px auto;" lay-filter="example">
+		<div class="layui-form-item">
+			<label class="layui-form-label"
+				style="width: 130px; margin-left: -45px;">通知公告内容</label>
+			<div class="layui-input-inline">
+				<textarea placeholder="请输入内容" class="layui-textarea"
+					style="height: 170px; width: 250px;" name="notice_content"
+					th:text="${#strings.escapeXml(notice.notice_content)}"></textarea>
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none;">
+			<div class="layui-input-block">
+				<input type="hidden" name="release_time" autocomplete="off"
+					id="release_time" class="layui-input"
+					th:value="${#strings.escapeXml(notice.release_time)}">
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none;">
+			<div class="layui-input-block">
+				<input type="hidden" name="admin_id" autocomplete="off"
+					id="admin_id" class="layui-input"
+					th:value="${#strings.escapeXml(notice.admin_id)}">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<button class="layui-btn" lay-submit lay-filter="upp_sub" id="btnUpp">确认修改</button>
+			<input type="reset" class="layui-btn layui-btn-primary"
+				id="resetForm"></input>
+		</div>
+	</form>
+</body>
+</html>

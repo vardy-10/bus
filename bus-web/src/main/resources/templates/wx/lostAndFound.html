@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>失物招领</title>
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	</head>
+	<style>
+		h4 {
+			word-break: keep-all;
+			white-space: nowrap;
+		}
+
+		.date,
+		.time {
+			display: inline-block;
+		}
+
+		.time {
+			margin-left: 20px;
+		}
+		
+	</style>
+	<body>
+		<div data-role="page" id="pageone">
+			<div data-role="header">
+				<h1>失物招领</h1>
+			</div>
+
+			<div data-role="content" style="border: 1px solid #BBBBBB;margin: 20px 10px 0px 10px;border-radius: 4px;">
+				<table align="center" id="tableBody">
+
+				</table>
+			</div>
+		</div>
+		<script>
+			function timestampToTime(timestamp) {
+		        var date = new Date(timestamp * 1000);
+		        var Y = date.getFullYear() + '-';
+		        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+		        var D = date.getDate() + ' ';
+		        var h = date.getHours() + ':';
+		        var m = date.getMinutes() + ':';
+		        var s = date.getSeconds();
+		        return Y+M+D+h+m+s;
+		    }
+			$(window).load( function(){
+		        $.ajax({
+		            type:'GET',
+		            dataType: "json",
+		            url:"getRetrieve",
+		            success:function(res){
+		                if(res.code == "0"){
+		                    var info = res.data;
+		                    var arr = JSON.parse(JSON.stringify(info));
+		                    var contentBody = '';
+		                    if (arr.length > 0) {
+		                    	$.each(arr, function (index, val) {
+			                    	contentBody += " <h4>" + timestampToTime(val.release_time) + "</h4><div style='border: 1px solid #BBBBBB;padding:5px;overflow:hidden;'><p>" + val.retrieve_content + "</p></div>"
+			                    });
+			                    document.getElementById('tableBody').innerHTML=contentBody;
+		                    } else {
+		                    	$('#divBody').html("<center>当前没有失物招领信息！</center>");
+		                    }
+		                } else {
+		                    $('#divBody').html("<center>加载失败！</center>");
+		                }
+		            },
+		            error:function(){
+		                $('#divBody').html("<center>网络异常，请稍后再试！</center>");
+		            }
+		        });
+			} );
+		</script>
+	</body>
+</html>

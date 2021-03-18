@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.OpinionDao">
+	<sql id="tableName">sbus_opinion</sql>
+
+	<select id="select" resultType="com.zah.entity.Opinion"
+		parameterType="String">
+		SELECT ${otherMap.column} FROM
+		<include refid="tableName" />
+		<if test="otherMap.join!=null">${otherMap.join}</if>
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+		<if test="otherMap.group!=null">GROUP BY ${otherMap.group}</if>
+		<if test="otherMap.order!=null">ORDER BY ${otherMap.order}</if>
+		<if test="otherMap.limit!=null">LIMIT ${otherMap.limit}</if>
+	</select>
+	<insert id="insert" parameterType="String">
+		INSERT INTO
+		<include refid="tableName" />
+		SET
+		<foreach collection="setMap" index="key" item="value"
+			separator=",">
+			${key}=#{value}
+		</foreach>
+	</insert>
+	<update id="update" parameterType="String">
+		UPDATE
+		<include refid="tableName" />
+		SET
+		<foreach collection="setMap" index="key" item="value"
+			separator=",">
+			${key}=#{value}
+		</foreach>
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+	</update>
+	<delete id="delete" parameterType="String">
+		DELETE FROM
+		<include refid="tableName" />
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+	</delete>
+	<select id="getCountBy" resultType="Integer">
+		SELECT COUNT(submit_time) FROM sbus_opinion WHERE 1=1
+	
+			<if test="submit_time!=null">AND submit_time=#{submit_time}
+			</if>
+		
+	</select>
+	<select id="getOpinionList" resultType="com.zah.entity.Opinion">
+		SELECT submit_time,opinion_content FROM
+		<include refid="tableName" />
+
+		WHERE 1=1
+
+		<if test="columnMap.submit_time!=null">AND submit_time=#{columnMap.submit_time}
+		</if>
+		ORDER BY passenger_id DESC limit
+		#{offset},#{size}
+	</select>
+	
+	<insert id="insertWx">
+		INSERT INTO sbus_opinion(submit_time, passenger_id, opinion_content) value(#{submitTime}, #{passengerId}, #{opinionTontent})
+	</insert>
+
+
+</mapper>

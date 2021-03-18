@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>北航校车管理系统</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/bus/busTempCheckShow.js"></script>
+<script src="../../js/common.js"></script>
+<script type="text/javascript "
+	src="../../static/js/jquery-1.9.1.min.js"></script>
+<style type="text/css">
+.layui-btn-container div {
+	float: left;
+}
+
+.layui-block {
+	margin: 10px 10px 0px 20px;
+}
+
+.layui-inline {
+	margin: 10px 10px 0px 20px;
+}
+
+.layui-form-label {
+	width: 150px !important;
+}
+
+#btn {
+	margin: 10px 0px 0px 20px;
+}
+
+.layui-form-pane .layui-form-checkbox {
+	margin: 4px 10px 4px 10px;
+}
+/*不显示秒*/
+.layui-laydate-content>.layui-laydate-list {
+	padding-bottom: 0px;
+	overflow: hidden;
+}
+
+.layui-laydate-content>.layui-laydate-list>li {
+	width: 50%
+}
+
+.merge-box .scrollbox .merge-list {
+	padding-bottom: 5px;
+}
+/*设置时间框  */
+.layui-input-inline>input {
+	width: 200px !important;
+}
+
+#time2, #time3 {
+	width: 90px !important;
+}
+</style>
+
+</head>
+<body>
+	<fieldset th:if="${#strings.isEmpty(act)}"
+		class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+		<legend>临时工勤用户审核</legend>
+	</fieldset>
+	<input id="act" type="hidden" th:value=${act}>
+	<form class="layui-form layui-form-pane">
+		<div class="layui-form" id="searchForm">
+			<div class="layui-inline">
+				<label class="layui-form-label">状态</label>
+				<div class="layui-input-inline" style="width: 200px;">
+					<select name="is_audit" lay-filter="aihao" id="is_audit">
+						<option value="0">未审核</option>
+						<option value="1">已审核</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">日期</label>
+				<div class="layui-input-inline">
+					<input type="text" name="date" readonly="readonly"
+						autocomplete="off" class="layui-input" id="test1"
+						placeholder="根据日期查询">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">姓名</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="temp_name"
+						placeholder="根据姓名查询" name="temp_name" autocomplete="off">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">类型</label>
+				<div class="layui-input-inline">
+					<select name="temp_type" lay-filter="aihao" id="temp_type">
+					<option value="">请选择</option>
+					<option value="1">教工</option>
+					<option value="2">学生</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">部门</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="temp_dept"
+						placeholder="根据部门查询" name="temp_dept" autocomplete="off">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">岗位</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="temp_post"
+						placeholder="根据岗位查询" name="temp_post" autocomplete="off">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">工号</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="temp_number"
+						placeholder="根据工号查询" name="temp_number" autocomplete="off">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">手机号码</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="temp_mobile"
+						placeholder="根据手机号码查询" name="temp_mobile" autocomplete="off">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">直属领导</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" id="temp_boss_name"
+						placeholder="根据直属领导查询" name="temp_boss_name" autocomplete="off">
+				</div>
+			</div>
+			<button class="layui-btn" lay-submit lay-filter="searchBtn" id="btn">
+				<i class="layui-icon layui-icon-search"></i>
+			</button>
+		</div>
+	</form>
+	<table class="layui-hide" id="test" lay-filter="test"></table>
+	<div style="text-align: right;">
+		<button class="layui-btn layui-btn-sm" id="addTempCheck"
+			style="margin-right: 20px;">添加</button>
+	</div>
+	</div>
+	</div>
+	<div th:if="${act=='publish'}"
+		style="float: right; margin-top: 10px; margin-left: 20px;">
+		<button class="layui-btn layui-btn-sm" id="publishFlight">发布计划</button>
+	</div>
+	</div>
+	<script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="showOne" >详情</a>
+  		<a class="layui-btn layui-btn-xs" lay-event="update" >编辑</a>
+  		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+	</script>
+
+</body>
+</html>

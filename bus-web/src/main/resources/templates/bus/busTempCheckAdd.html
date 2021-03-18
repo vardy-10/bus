@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>北航校车管理系统</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script type="text/javascript" src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/verify.js"></script>
+<script src="../../js/xm-select.js"></script>
+<script src="../../js/bus/busTempCheckAdd.js"></script>
+<script src="../../js/common.js"></script>
+<style type="text/css">
+.layui-form-pane .layui-form-checkbox {
+	margin: 4px 10px 4px 10px;
+}
+/* lay-verify="required|username" */
+.layui-form-label {
+	width: 120px !important;
+}
+.layui-input-block{
+margin-left: 120px!important;
+}
+/*不显示秒*/
+.layui-laydate-content>.layui-laydate-list {
+	padding-bottom: 0px;
+	overflow: hidden;
+}
+
+.layui-laydate-content>.layui-laydate-list>li {
+	width: 50%
+}
+
+.merge-box .scrollbox .merge-list {
+	padding-bottom: 5px;
+}
+</style>
+</head>
+<body style="background: url('../images/bg.png'); text-align: center;">
+	<form class="layui-form layui-form-pane"
+		style="width: 400px; margin: 20px auto;">
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">身份证号</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="temp_identity"
+					placeholder="请输入20位以内的身份证号" name="temp_identity" autocomplete="off">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">姓名</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" name="temp_name"
+					autocomplete="off" id="temp_name" placeholder="请输入10位以内的姓名">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">密码</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="password" placeholder=""
+					name="password" autocomplete="off" placeholder="请输入40位以内的密码">
+			</div>
+		</div>
+		<div class="layui-form-item" pane="">
+			<label class="layui-form-label">性别</label>
+			<div class="layui-input-block">
+				<input type="radio" name="temp_sex" value="1" title="男"
+					lay-filter="jiedian" checked=""> <input type="radio" name="temp_sex" value="2" title="女"
+					lay-filter="jiedian">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">手机号码</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="temp_mobile"
+					placeholder="请输入15位以内的手机号码" name="temp_mobile" autocomplete="off">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">类型</label>
+			<div class="layui-input-block">
+				<select name="temp_type" lay-filter="aihao" style="width: 360px;">
+					<option value="0">请选择类型</option>
+					<option value="1">教工</option>
+					<option value="2">学生</option>
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">电话</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="temp_phone"
+					placeholder="" name="temp_phone" autocomplete="off">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">所属校区</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="temp_campus"
+					placeholder="" name="temp_campus" autocomplete="off">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">部门</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="temp_dept" placeholder=""
+					name="temp_dept" autocomplete="off">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">岗位</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="temp_post" placeholder=""
+					name="temp_post" autocomplete="off">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">工号</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="temp_number"
+					placeholder="" name="temp_number" autocomplete="off">
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">邮箱</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="temp_email"
+					placeholder="" name="temp_email" autocomplete="off">
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">直属领导</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" id="temp_boss_name"
+					placeholder="" name="temp_boss_name" autocomplete="off">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">领导联系电话</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input" name="temp_boss_phone"
+					autocomplete="off" id="temp_boss_phone">
+			</div>
+		</div>
+		<!-- <div id="demo1" class="xm-select-demo"></div> -->
+		<div class="layui-form-item">
+			<button class="layui-btn" lay-submit lay-filter="add_sub" id="btnAdd">确认添加</button>
+			<input type="reset" class="layui-btn layui-btn-primary"
+				id="resetForm"></input>
+		</div>
+	</form>
+</body>
+</html>

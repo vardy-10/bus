@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.BusVehicleDao">
+	<select id="getCountBy" resultType="Integer">
+		SELECT COUNT(vehicle_id) FROM sbus_vehicle WHERE 1=1
+		<if test="columnMap.vehicle_number!=null">AND vehicle_number=#{columnMap.vehicle_number}
+		</if>
+		<if test="columnMap.license_plate!=null">AND license_plate=#{columnMap.license_plate}</if>
+		<if test="columnMap.line_id!=null">AND line_id=#{columnMap.line_id}</if>
+	</select>
+
+	<select id="getBusVehicleList" resultType="com.zah.entity.BusVehicle">
+		SELECT 
+		l.line_name,v.vehicle_id,v.vehicle_number,v.license_plate,v.device1_number,v.device2_number
+		FROM sbus_vehicle v left join sbus_line l on l.line_id=v.line_id 
+		WHERE 1=1
+		<if test="columnMap.vehicle_number!=null">AND vehicle_number=#{columnMap.vehicle_number}
+		</if>
+		<if test="columnMap.license_plate!=null">AND license_plate=#{columnMap.license_plate}</if>
+		<if test="columnMap.line_id!=null">AND v.line_id=#{columnMap.line_id}</if>
+		ORDER BY v.vehicle_id desc limit #{offset},#{size}
+	</select>
+
+	<select id="selectInfoByKey" resultType="com.zah.entity.BusVehicle"
+		parameterType="String">
+		SELECT ${columns} FROM sbus_vehicle WHERE
+		${key}=#{value}
+	</select>
+
+	<insert id="addBusVehicle" parameterType="String">
+		INSERT INTO
+		sbus_vehicle(line_id,vehicle_number,license_plate,seat_num,
+		device1_number,device2_number,longitude,latitude,direction,is_in_origin,is_in_line)
+		VALUES
+		(#{columnMap.line_id},#{columnMap.vehicle_number},#{columnMap.license_plate},#{columnMap.seat_num},#{columnMap.device1_number},#{columnMap.device2_number},0,0,0,0,0)
+	</insert>
+
+	<delete id="deleteBusVehicle" parameterType="String">
+		DELETE FROM
+		sbus_vehicle
+		WHERE vehicle_id=#{vehicle_id}
+	</delete>
+
+	<update id="updateVehicle" parameterType="String">
+		UPDATE sbus_vehicle SET
+		line_id=#{columnMap.line_id}
+		,vehicle_number=#{columnMap.vehicle_number}
+		,license_plate=#{columnMap.license_plate}
+		,seat_num=#{columnMap.seat_num}
+		,device1_number=#{columnMap.device1_number}
+		,device2_number=#{columnMap.device2_number}
+		WHERE ${key}=#{value}
+	</update>
+
+	<update id="updateVehicleT2Info" parameterType="com.zah.entity.BusVehicle">
+		UPDATE
+		sbus_vehicle SET
+		log_time=#{busVehicle.log_time},
+		longitude=#{busVehicle.longitude},
+		latitude=#{busVehicle.latitude}
+		WHERE device1_number=#{busVehicle.device1_number}
+	</update>
+
+	<select id="getVehicle" resultType="com.zah.entity.BusVehicle">
+		SELECT vehicle_id, seat_num FROM sbus_vehicle WHERE vehicle_id=#{vehicle_id}
+	</select>
+
+
+</mapper>

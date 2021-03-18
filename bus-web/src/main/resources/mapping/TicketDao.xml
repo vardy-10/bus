@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.TicketDao">
+	<select id="getTempCount" resultType="Integer">
+		SELECT COUNT(*) FROM sbus_temp where 1=1
+		<if test="columnMap.create_time!=null">AND create_time between #{columnMap.index_time} and
+			#{columnMap.create_time}
+		</if>
+		<if test="columnMap.is_audit!=null">AND is_audit=#{columnMap.is_audit}</if>
+		<if test="columnMap.temp_name!=null">AND temp_name=#{columnMap.temp_name}</if>
+		<if test="columnMap.temp_type!=null">AND temp_type=#{columnMap.temp_type}</if>
+		<if test="columnMap.temp_dept!=null">AND temp_dept=#{columnMap.temp_dept}</if>
+		<if test="columnMap.temp_number!=null">AND temp_number=#{columnMap.temp_number}</if>
+		<if test="columnMap.temp_post!=null">AND temp_post=#{columnMap.temp_post}</if>
+		<if test="columnMap.temp_mobile!=null">AND temp_mobile=#{columnMap.temp_mobile}</if>
+		<if test="columnMap.temp_boss_name!=null">AND temp_boss_name=#{columnMap.temp_boss_name}</if>
+	</select>
+	<select id="getTempList" parameterType="String" resultType="java.util.Map">
+		SELECT
+		create_time,temp_name,temp_type,temp_number,temp_dept,temp_post,temp_identity,temp_mobile,temp_boss_name,is_audit
+		from sbus_temp
+		where 1=1
+		<if test="columnMap.create_time!=null">AND create_time between #{columnMap.index_time} and
+			#{columnMap.create_time}
+		</if>
+		<if test="columnMap.is_audit!=null">AND is_audit=#{columnMap.is_audit}</if>
+		<if test="columnMap.temp_name!=null">AND temp_name=#{columnMap.temp_name}</if>
+		<if test="columnMap.temp_type!=null">AND temp_type=#{columnMap.temp_type}</if>
+		<if test="columnMap.temp_dept!=null">AND temp_dept=#{columnMap.temp_dept}</if>
+		<if test="columnMap.temp_number!=null">AND temp_number=#{columnMap.temp_number}</if>
+		<if test="columnMap.temp_post!=null">AND temp_post=#{columnMap.temp_post}</if>
+		<if test="columnMap.temp_mobile!=null">AND temp_mobile=#{columnMap.temp_mobile}</if>
+		<if test="columnMap.temp_boss_name!=null">AND temp_boss_name=#{columnMap.temp_boss_name}</if>
+		order by create_time desc,temp_identity
+		<if test="offset>=0 and size>=0">limit #{offset}, #{size}</if>
+	</select>
+	<select id="getOrderCount" resultType="Integer">
+		SELECT COUNT(*)
+		from sbus_order o left join sbus_shifts_real r on
+		o.shifts_date=r.shifts_date and o.shifts_number=r.shifts_number left
+		join sbus_line l on r.line_id=l.line_id left join sbus_vehicle v on
+		l.line_id=v.line_id
+		where 1=1
+		<if test="columnMap.passenger_id!=null">AND o.passenger_id=#{columnMap.passenger_id}</if>
+		<if test="columnMap.shifts_number!=null">AND o.shifts_number=#{columnMap.shifts_number}</if>
+		<if test="columnMap.line_name!=null">AND l.line_name=#{columnMap.line_name}</if>
+		<if test="columnMap.up_origin_name!=null">AND l.up_origin_name=#{columnMap.up_origin_name}</if>
+		<if test="columnMap.order_id!=null">AND o.order_id=#{columnMap.order_id}</if>
+		<if test="columnMap.order_sn!=null">AND o.order_sn=#{columnMap.order_sn}</if>
+		<if test="columnMap.refund_sn!=null">AND o.refund_sn=#{columnMap.refund_sn}</if>
+		<if test="columnMap.order_state!=null">AND o.order_state=#{columnMap.order_state}</if>
+		<if test="columnMap.passenger_type!=null">AND o.passenger_type=#{columnMap.passenger_type}</if>
+		<if test="columnMap.shifts_date!=null">AND r.shifts_date=#{columnMap.shifts_date}</if>
+		<if test="columnMap.startTime!=null">AND <![CDATA[ r.depart_time>=#{columnMap.startTime} ]]>
+		</if>
+		<if test="columnMap.endTime!=null">AND <![CDATA[r.depart_time<=#{columnMap.endTime}]]>
+		</if>
+	</select>
+	<select id="getOrderList" parameterType="String" resultType="java.util.Map">
+		SELECT
+		o.order_id,DATE_FORMAT(FROM_UNIXTIME(o.create_time),"%Y-%m-%d
+		%H:%i:%s") as
+		create_time,o.passenger_id,o.passenger_type,o.order_sn,o.order_state,DATE_FORMAT(o.shifts_date,"%Y-%m-%d")
+		as shifts_date,o.shifts_number,DATE_FORMAT(r.depart_time,"%H:%i") as
+		depart_time,DATE_FORMAT(r.arrive_time,"%H:%i") as
+		arrive_time,l.line_name,l.up_origin_name,l.up_terminal_name,v.seat_num,o.refund_sn,refund_sn,o.use_time,o.refund_time
+		from sbus_order o left join sbus_shifts_real r on
+		o.shifts_date=r.shifts_date and o.shifts_number=r.shifts_number left
+		join sbus_line l on r.line_id=l.line_id left join sbus_vehicle v on
+		l.line_id=v.line_id
+		where 1=1
+		<if test="columnMap.passenger_id!=null">AND o.passenger_id=#{columnMap.passenger_id}</if>
+		<if test="columnMap.shifts_number!=null">AND o.shifts_number=#{columnMap.shifts_number}</if>
+		<if test="columnMap.line_name!=null">AND l.line_name=#{columnMap.line_name}</if>
+		<if test="columnMap.up_origin_name!=null">AND l.up_origin_name=#{columnMap.up_origin_name}</if>
+		<if test="columnMap.order_id!=null">AND o.order_id=#{columnMap.order_id}</if>
+		<if test="columnMap.order_sn!=null">AND o.order_sn=#{columnMap.order_sn}</if>
+		<if test="columnMap.refund_sn!=null">AND o.refund_sn=#{columnMap.refund_sn}</if>
+		<if test="columnMap.order_state!=null">AND o.order_state=#{columnMap.order_state}</if>
+		<if test="columnMap.passenger_type!=null">AND o.passenger_type=#{columnMap.passenger_type}</if>
+		<if test="columnMap.shifts_date!=null">AND r.shifts_date=#{columnMap.shifts_date}</if>
+		<if test="columnMap.startTime!=null">AND <![CDATA[ r.depart_time>=#{columnMap.startTime} ]]>
+		</if>
+		<if test="columnMap.endTime!=null">AND <![CDATA[r.depart_time<=#{columnMap.endTime}]]>
+		</if>
+		order by create_time desc,order_id desc
+		<if test="offset>=0 and size>=0">limit #{offset}, #{size}</if>
+	</select>
+	<select id="getAccountCheckCount" resultType="Integer">
+		SELECT COUNT(*)
+		from
+		sbus_shifts_real s
+		left join sbus_line l on
+		s.line_id=l.line_id
+		left join sbus_driver d on s.driver_id=d.driver_id
+		left join
+		sbus_vehicle v
+		on s.vehicle_id=v.vehicle_id
+		where 1=1
+        <if test="columnMap.start_date!=null">AND <![CDATA[ s.shifts_date>=#{columnMap.start_date} ]]>
+		</if>
+		<if test="columnMap.end_date!=null">AND <![CDATA[s.shifts_date<=#{columnMap.end_date}]]>
+		</if>
+			<if test="columnMap.start_time!=null">AND <![CDATA[ s.depart_time>=#{columnMap.start_time} ]]>
+		</if>
+		<if test="columnMap.end_time!=null">AND <![CDATA[s.depart_time<=#{columnMap.end_time}]]>
+		</if>
+		<if test="columnMap.shifts_number!=null">AND s.shifts_number=#{columnMap.shifts_number}</if>
+		<if test="columnMap.line_name!=null">AND l.line_name=#{columnMap.line_name}</if>
+		<if test="columnMap.up_origin_name!=null">AND l.up_origin_name=#{columnMap.up_origin_name}</if>
+		<if test="columnMap.driver_name!=null">AND d.driver_name=#{columnMap.driver_name}</if>
+		<if test="columnMap.vehicle_number!=null">AND v.vehicle_number=#{columnMap.vehicle_number}</if>
+	</select>
+	<select id="getAccountCheckListByLimit" parameterType="String"
+		resultType="java.util.Map">
+		SELECT
+		DATE_FORMAT(s.shifts_date,"%Y-%m-%d") as shifts_date,
+		d.driver_name,s.shifts_number,s.total_fare,l.line_name,s.student_num,s.teacher_num,
+		DATE_FORMAT(s.depart_time,"%H:%i") as depart_time,
+		DATE_FORMAT(s.arrive_time,"%H:%i") as arrive_time,
+		v.vehicle_number,l.up_origin_name,l.up_terminal_name
+		from
+		sbus_shifts_real s
+		left join sbus_line l on s.line_id=l.line_id
+		left
+		join sbus_driver d on s.driver_id=d.driver_id
+		left join
+		sbus_vehicle v
+		on s.vehicle_id=v.vehicle_id
+		where 1=1
+		<if test="columnMap.start_date!=null">AND <![CDATA[ s.shifts_date>=#{columnMap.start_date} ]]>
+		</if>
+		<if test="columnMap.end_date!=null">AND <![CDATA[s.shifts_date<=#{columnMap.end_date}]]>
+		</if>
+		<if test="columnMap.start_time!=null">AND <![CDATA[ s.depart_time>=#{columnMap.start_time} ]]>
+		</if>
+		<if test="columnMap.end_time!=null">AND <![CDATA[s.depart_time<=#{columnMap.end_time}]]>
+		</if>
+		<if test="columnMap.shifts_number!=null">AND s.shifts_number=#{columnMap.shifts_number}</if>
+		<if test="columnMap.line_name!=null">AND l.line_name=#{columnMap.line_name}</if>
+		<if test="columnMap.up_origin_name!=null">AND l.up_origin_name=#{columnMap.up_origin_name}</if>
+		<if test="columnMap.driver_name!=null">AND d.driver_name=#{columnMap.driver_name}</if>
+		<if test="columnMap.vehicle_number!=null">AND v.vehicle_number=#{columnMap.vehicle_number}</if>
+		order by s.line_id,s.depart_time
+		<if test="offset>=0 and size>=0">limit #{offset}, #{size}</if>
+	</select>
+	<select id="getAccountCheckList" parameterType="String"
+		resultType="java.util.Map">
+		SELECT
+		DATE_FORMAT(s.shifts_date,"%Y-%m-%d") as shifts_date,
+		d.driver_name,s.shifts_number,s.total_fare,l.line_name,s.student_num,s.teacher_num,
+		DATE_FORMAT(s.depart_time,"%H:%i") as depart_time,
+		DATE_FORMAT(s.arrive_time,"%H:%i") as arrive_time,
+		v.vehicle_number,l.up_origin_name,l.up_terminal_name
+		from
+		sbus_shifts_real s
+		left join sbus_line l on s.line_id=l.line_id
+		left
+		join sbus_driver d on s.driver_id=d.driver_id
+		left join
+		sbus_vehicle v
+		on s.vehicle_id=v.vehicle_id
+		where 1=1
+		<if test="columnMap.start_date!=null">AND <![CDATA[ s.shifts_date>=#{columnMap.start_date} ]]>
+		</if>
+		<if test="columnMap.end_date!=null">AND <![CDATA[s.shifts_date<=#{columnMap.end_date}]]>
+		</if>
+		<if test="columnMap.start_time!=null">AND <![CDATA[ s.depart_time>=#{columnMap.start_time} ]]>
+		</if>
+		<if test="columnMap.end_time!=null">AND <![CDATA[s.depart_time<=#{columnMap.end_time}]]>
+		</if>
+		<if test="columnMap.shifts_number!=null">AND s.shifts_number=#{columnMap.shifts_number}</if>
+		<if test="columnMap.line_name!=null">AND l.line_name=#{columnMap.line_name}</if>
+		<if test="columnMap.up_origin_name!=null">AND l.up_origin_name=#{columnMap.up_origin_name}</if>
+		<if test="columnMap.driver_name!=null">AND d.driver_name=#{columnMap.driver_name}</if>
+		<if test="columnMap.vehicle_number!=null">AND v.vehicle_number=#{columnMap.vehicle_number}</if>
+		order by s.line_id,s.depart_time
+	</select>
+</mapper>

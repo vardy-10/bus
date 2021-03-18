@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.RetrieveDao">
+	<sql id="tableName">sbus_retrieve</sql>
+	<select id="getCount" resultType="Integer">
+		SELECT COUNT(*) FROM
+		<include refid="tableName" />
+	</select>
+	<select id="getCountBy" resultType="Integer">
+		SELECT COUNT(*) FROM sbus_admin a left join sbus_retrieve r on
+		a.admin_id=r.admin_id WHERE 1=1
+		<if test="columnMap.username!=null">AND a.username=#{columnMap.username}
+		</if>
+	</select>
+
+	<select id="selectRetrieve" resultType="com.zah.entity.Retrieve"
+		parameterType="String">
+		SELECT a.username,r.admin_id,r.release_time,r.retrieve_content FROM sbus_retrieve r LEFT JOIN sbus_admin a on a.admin_id=r.admin_id WHERE 1=1
+		<if test="columnMap.username!=null">AND a.username=#{columnMap.username}
+		</if>
+		ORDER BY release_time DESC, r.admin_id DESC
+		<if test="offset>=0 and size>=0">limit #{offset}, #{size}</if>
+	</select>
+
+	<select id="select" resultType="com.zah.entity.Retrieve"
+		parameterType="String">
+		SELECT ${otherMap.column} FROM
+		<include refid="tableName" />
+		<if test="otherMap.join!=null">${otherMap.join}</if>
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+		<if test="otherMap.group!=null">GROUP BY ${otherMap.group}</if>
+		<if test="otherMap.order!=null">ORDER BY ${otherMap.order}</if>
+		<if test="otherMap.limit!=null">LIMIT ${otherMap.limit}</if>
+	</select>
+	<insert id="insert" parameterType="String">
+		INSERT INTO
+		<include refid="tableName" />
+		SET
+		<foreach collection="setMap" index="key" item="value"
+			separator=",">
+			${key}=#{value}
+		</foreach>
+	</insert>
+	<update id="update" parameterType="String">
+		UPDATE
+		<include refid="tableName" />
+		SET
+		<foreach collection="setMap" index="key" item="value"
+			separator=",">
+			${key}=#{value}
+		</foreach>
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+	</update>
+	<delete id="delete" parameterType="String">
+		DELETE FROM
+		<include refid="tableName" />
+		WHERE 1=1
+		<foreach collection="whereMap" index="key" item="value"
+			separator=" ">
+			AND ${key}=#{value}
+		</foreach>
+	</delete>
+
+	<select id="selectWx" resultType="com.zah.entity.Retrieve">
+		SELECT release_time, retrieve_content, admin_id FROM sbus_retrieve ORDER BY release_time DESC, admin_id DESC
+	</select>
+
+
+
+
+
+
+
+</mapper>

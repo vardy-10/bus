@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	</head>
+	<style>
+		body {
+			font-weight: bold;
+		}
+.startPlace,
+		.endPlace
+		{
+		width: 40%;
+		float: left;
+		text-align: center;
+		height: 45px;
+		line-height: 45px;
+			
+		}
+	
+		.dir{
+			width: 20%;
+			float: left;
+			text-align: center;
+			height: 45px;
+			
+		}
+		.startDate,
+		
+		.departureTime {
+			width: 30%;
+			display: inline-block;
+			text-align: center;
+			height: 45px;
+			line-height: 45px;
+			overflow: hidden;
+		}
+		.week{
+			width: 20%;
+			display: inline-block;
+			text-align: center;
+			height: 45px;
+			line-height: 45px;
+			overflow: hidden;
+		}
+		.ticketType {
+			height: 50px;
+			border: 1px solid #0088BB;
+			text-align: center;
+			margin: 15px 10px 0px 10px;
+
+		}
+		.ticketList {
+			height: 50px;
+			text-align: center;
+		}
+		.ticketType>div,
+		.ticketList>div {
+			display: inline-block;
+			width: 20%;
+			display: inline-block;
+			text-align: center;
+			height: 50px;
+			line-height: 50px;
+		}
+		table thead tr{
+			background-color:#E6E6E6 ;
+		}
+		.icon {
+			border-style: solid;
+			border-width: 5px 20px 5px 20px;
+			border-color: transparent  transparent aquamarine aquamarine;
+			width: 0px;
+			height: 0px;
+			display: inline-block;
+			
+			}
+			.icon2{
+				width: 80px;
+				height:3px;
+				background-color: aquamarine;
+				display: inline-block;
+				
+			}
+			/*方向箭头 */
+			   #arrow{  
+			   	position: relative;
+			   	height: 12px;
+				top:40%;	  
+			   }
+			#arrow #arrowSecond{
+				border-style: solid;
+				border-width:4px 4px 4px 4px;
+				border-color: transparent   transparent   #22AADD  #22AADD;
+				width: 0px;
+				height: 0px;
+				position: absolute;
+				left:90%;
+			}
+			#arrow #arrowFirst{		
+				background:#22AADD;
+				border-width:1.1px;
+					border-style: solid;
+					width: 90%;
+						border-color:#22AADD;
+						position: absolute;
+						top:48%;
+			}
+	</style>
+	<body>
+		<div data-role="page">
+			<div data-role="header">
+				<h1>无票通知</h1>
+			</div>
+			<div data-role="main">
+				<!-- 显示时间目的地 -->
+				<div style="height: 130px;border: 1.7px solid  #D6D6D6;text-align: center;margin: 15px 10px 0px 10px;border-radius: 5px;	">
+					<div style="height:45px;margin: 15px 10px 0px 10px;">
+						<div class="startDate">09-17</div>
+						<div class="week">周二</div>
+						<div class="departureTime "><span>11:00</span>发车</div>
+					</div>
+					<hr align="center" width="80%" />
+					<div style="height:45px;">
+						<div class="startPlace" >
+							<span style="display:block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;font-size: 0.8rem;">明古科技园站</span>
+						</div>
+						<div class="dir">
+							<div id="arrow">
+								<div id="arrowFirst"></div>
+								<div id="arrowSecond"></div>
+							</div>
+							
+						</div>
+						<div class="endPlace">
+							<span style="display:block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;font-size: 0.8rem;">北京站</span>
+						</div>
+					</div>
+				</div>
+				<!-- 显示类别 -->
+				<div class="ticketType">
+					<div>类别</div>
+					<div>票价</div>
+					<div>余票</div>
+					<div>操作</div>
+				</div>
+				<!-- 车票信息列表 -->
+				<div style="border: 1px solid #0088BB;margin: 15px 10px 0px 10px;">
+					<div class="ticketList">
+						<div>教师票</div>
+						<div><span>5</span>张</div>
+						<div><span>10</span>元</div>
+						<div>
+							<div style="width: 60px;height: 40px;background:rgba(255,0,0,0.3);line-height: 40px;margin: 0px auto;color: white;border: 1px solid #005599;text-shadow:0 0 0 white;">无票</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+				$(".ticketList").tap(function() {
+					alert(1);
+				});
+		</script>
+	</body>
+</html>

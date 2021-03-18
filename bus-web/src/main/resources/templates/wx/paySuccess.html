@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	</head>
+	<style>
+		body {
+			font-weight: bold;
+		}
+.startPlace,
+		.endPlace
+		{
+		width: 40%;
+		float: left;
+		text-align: center;
+		height: 45px;
+		line-height: 45px;
+			
+		}
+	
+		.dir{
+			width: 20%;
+			float: left;
+			text-align: center;
+			height: 45px;
+			
+		}
+		.startDate,
+		
+		.departureTime {
+			width: 30%;
+			display: inline-block;
+			text-align: center;
+			height: 45px;
+			line-height: 45px;
+			overflow: hidden;
+		}
+		.week{
+			width: 20%;
+			display: inline-block;
+			text-align: center;
+			height: 45px;
+			line-height: 45px;
+			overflow: hidden;
+		}
+		.ticketType {
+			height: 50px;
+			border: 1px solid #0088BB;
+			text-align: center;
+			margin: 15px 10px 0px 10px;
+
+		}
+		.ticketList {
+			height: 50px;
+			text-align: center;
+		}
+		.ticketType>div,
+		.ticketList>div {
+			display: inline-block;
+			width: 20%;
+			display: inline-block;
+			text-align: center;
+			height: 50px;
+			line-height: 50px;
+		}
+		table thead tr{
+			background-color:#E6E6E6 ;
+		}
+		.icon {
+			border-style: solid;
+			border-width: 5px 20px 5px 20px;
+			border-color: transparent  transparent aquamarine aquamarine;
+			width: 0px;
+			height: 0px;
+			display: inline-block;
+			
+			}
+			.icon2{
+				width: 80px;
+				height:3px;
+				background-color: aquamarine;
+				display: inline-block;
+				
+			}
+			/*方向箭头 */
+			   #arrow{  
+			   	position: relative;
+			   	height: 12px;
+				top:40%;	  
+			   }
+			#arrow #arrowSecond{
+				border-style: solid;
+				border-width:4px 4px 4px 4px;
+				border-color: transparent   transparent   #22AADD  #22AADD;
+				width: 0px;
+				height: 0px;
+				position: absolute;
+				left:90%;
+			}
+			#arrow #arrowFirst{		
+				background:#22AADD;
+				border-width:1.1px;
+					border-style: solid;
+					width: 90%;
+						border-color:#22AADD;
+						position: absolute;
+						top:48%;
+			}
+	</style>
+	<body>
+		<div data-role="page">
+			<div data-role="header">
+				<h1>支付成功</h1>
+			</div>
+			<div data-role="main">
+				<!-- 显示时间目的地 -->
+				<div style="height: 130px;border: 1.7px solid  #D6D6D6;text-align: center;margin: 15px 10px 0px 10px;border-radius: 5px;	">
+					<div style="height:45px;margin: 15px 0px 0px 0px;">
+						<div class="startDate">09-17</div>
+						<div class="week">周二</div>
+						<div class="departureTime "><span>11:00</span>发车</div>
+					</div>
+					<hr align="center" width="80%" />
+					<div style="height:45px;">
+						<div class="startPlace" >
+							<span style="display:block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;font-size: 0.8rem;">明古科技园站</span>
+						</div>
+						<div class="dir">
+							<div id="arrow">
+								<div id="arrowFirst"></div>
+								<div id="arrowSecond"></div>
+							</div>
+							
+						</div>
+						<div class="endPlace">
+							<span style="display:block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;font-size: 0.8rem;">北京站</span>
+						</div>
+					</div>
+				</div>
+				<!-- 车票顶顶信息列表 -->
+				<div style="margin: 20px 10px 20px 10px;">
+					<table data-role="table" class="ui-responsive"  align="center">
+					      <thead>
+					        <tr>
+					          <th>乘客姓名</th>
+							   <th>学工ID</th>
+					          <th>师/生</th>
+					          <th>票价</th>
+					          <th>日期</th>
+							  <th>车次</th>
+					          <th>票号</th>
+					        </tr>
+					      </thead>
+					      <tbody>
+					        <tr style="background: #E8E8E8;">
+					          <td>张老师</td>
+					          <td>1020102</td>
+					          <td>生</td>
+					          <td >10元</td>
+							  <td>2020-01-16</td>
+							  <td>北1</td>
+							  <td>041</td>
+					        </tr>
+					      </tbody>
+					    </table>
+					
+				</div>
+				<!-- 提示信息 -->
+                <div style="text-align: center;">支付成功</div>
+				<!-- 显示二维码 -->
+				<div style="text-align: center;"><img src="http://zah123.ngrok2.xiaomiqiu.cn/wechat/qrCode"></div>
+			</div>
+		</div>
+		<script>
+
+		</script>
+	</body>
+</html>

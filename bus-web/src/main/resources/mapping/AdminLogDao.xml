@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.AdminLogDao">
+	<sql id="adminLogColumns">l.log_id AS "log_id",l.admin_id AS "admin_id",l.log_info AS
+		"log_info",l.log_time AS "log_time" </sql>
+	<sql id="adminColumns">a.username AS "username",a.type AS "type",a.name AS "name"
+	</sql>
+
+	<insert id="addAdminLog">
+		INSERT INTO
+		sbus_admin_log(admin_id,log_info,log_time) VALUES
+		(#{admin_id},#{log_info},#{log_time})
+	</insert>
+	<select id="getAdminLogCount" resultType="Integer">
+		SELECT COUNT(l.log_id) FROM sbus_admin_log l LEFT JOIN sbus_admin a ON
+		l.admin_id=a.admin_id WHERE 1=1
+		<if test="columnMap.username!=null">AND a.username=#{columnMap.username}</if>
+		<if test="columnMap.startTime!=null">AND <![CDATA[ l.log_time>=#{columnMap.startTime} ]]></if>
+		<if test="columnMap.endTime!=null">AND <![CDATA[ l.log_time<=#{columnMap.endTime} ]]>
+		</if>
+	</select>
+	<select id="getAdminLogList" parameterType="String" resultType="java.util.Map">
+		SELECT
+		<include refid="adminLogColumns" />
+		,
+		<include refid="adminColumns" />
+		FROM sbus_admin_log l LEFT JOIN sbus_admin a ON l.admin_id=a.admin_id
+		WHERE 1=1
+		<if test="columnMap.username!=null">AND a.username=#{columnMap.username}</if>
+		<if test="columnMap.startTime!=null">AND <![CDATA[ l.log_time>=#{columnMap.startTime} ]]>
+		</if>
+		<if test="columnMap.endTime!=null">AND <![CDATA[ l.log_time<=#{columnMap.endTime} ]]>
+		</if>
+		ORDER BY log_time DESC,log_id DESC
+		<if test="offset>=0 and size>=0">limit #{offset}, #{size}</if>
+	</select>
+	<delete id="clearUserLogBy" parameterType="String">
+		DELETE l FROM sbus_admin_log l LEFT JOIN sbus_admin a ON
+		l.admin_id=a.admin_id WHERE 1=1
+
+		<if test="columnMap.username!=null">AND a.username=#{columnMap.username}</if>
+		<if test="columnMap.startTime!=null">AND <![CDATA[ l.log_time>=#{columnMap.startTime} ]]>
+		</if>
+		<if test="columnMap.endTime!=null">AND <![CDATA[ l.log_time<=#{columnMap.endTime} ]]>
+		</if>
+	</delete>
+
+</mapper>

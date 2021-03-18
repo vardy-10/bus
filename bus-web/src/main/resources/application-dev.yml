@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: schoolbus_beihang    #指定应用的名称建议使用小写
+  datasource:
+    url: jdbc:mysql://119.29.137.92:3306/schoolbus_beihang?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 119.29.137.92
+    port: 6379
+    database: 0
+  rabbitmq:
+    username: guest
+    password: guest
+    host: 119.29.137.92
+    publisher-returns: true
+    publisher-confirm-type: correlated
+server:
+  port: 8080

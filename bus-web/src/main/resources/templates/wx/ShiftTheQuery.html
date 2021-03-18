@@ -1,0 +1,562 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>班次查询</title>
+		<script src="../../static/js/jquery-1.9.1.min.js"></script>
+		<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="../../static/js/common.js"></script>
+		<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+		<style>
+			* {
+	margin: 0px;
+	padding: 0px;
+}
+
+#busList div {
+	display: inline-block;
+}
+
+.list_row {
+	width: 100%;
+	height: 100%;
+}
+
+.time {
+	color: #22AADD;
+}
+
+.ui-grid-b {
+	font-size: 0.7rem;
+}
+
+.ui-grid-b>.ui-block-c div {
+	text-align: center;
+	height: 60px;
+	line-height: 60px;
+	font-size: 0.8rem;
+}
+
+.ui-grid-b>.ui-block-c {
+	height: 60px;
+	width: 20% !important;
+}
+
+.ui-grid-b>.ui-block-b {
+	height: 60px;
+	width: 75% !important;
+}
+
+.ui-grid-b>.ui-block-d {
+	height: 60px;
+	width: 5% !important;
+}
+
+.ui-grid-b>.ui-block-b .inner {
+	
+}
+
+.ui-grid-b>.ui-block-b .inner>div {
+	height: 60px;
+	float: left;
+	position: relative;
+}
+
+.ui-grid-b>.ui-block-b .inner .start {
+	width: 40%;
+}
+
+.ui-grid-b>.ui-block-b .inner .end {
+	width: 40%;
+}
+
+.ui-grid-b>.ui-block-b .inner .dir {
+	position: relative;
+	width: 20%;
+}
+
+.ui-grid-b>.ui-block-b .inner img {
+	width: 60%;
+}
+
+.ui-grid-b>.ui-block-b .inner .start>div {
+	position: absolute;
+}
+
+.ui-grid-b>.ui-block-b .inner .start .icon {
+	left: 10%;
+	top: 20%;
+}
+
+.ui-grid-b>.ui-block-b .inner .start .startPlace {
+	overflow: hidden;
+	width: 70%;
+	height: 0.75rem;
+	line-height: 0.75rem;
+	font-size: 0.75rem;
+	left: 25%;
+	top: 20%;
+}
+
+.ui-grid-b>.ui-block-b .inner .start .time {
+	left: 10%;
+	top: 60%;
+}
+
+.ui-grid-b>.ui-block-b .inner .end>div {
+	position: absolute;
+}
+
+.ui-grid-b>.ui-block-b .inner .end .icon {
+	left: 10%;
+	top: 20%;
+}
+
+.ui-grid-b>.ui-block-b .inner .end .startPlace {
+	overflow: hidden;
+	width: 70%;
+	height: 0.75rem;
+	line-height: 0.75rem;
+	font-size: 0.75rem;
+	left: 25%;
+	top: 20%;
+}
+
+.ui-grid-b>.ui-block-b .inner .end .time {
+	left: 10%;
+	top: 60%;
+}
+/* */
+.ui-grid-b>.ui-block-b .inner .dir>div {
+	position: absolute;
+}
+
+.ui-grid-b>.ui-block-b .inner .dir .time {
+	top: 70%;
+}
+
+.ui-grid-b>.ui-block-b .inner .dir .arrow {
+	top: 30%;
+}
+/*方向箭头 */
+#arrow {
+	position: relative;
+	height: 12px;
+	top: 30%;
+}
+
+#arrow #arrowSecond {
+	border-style: solid;
+	border-width: 4px 4px 4px 4px;
+	border-color: transparent transparent #22AADD #22AADD;
+	width: 0px;
+	height: 0px;
+	position: absolute;
+	left: 88%;
+}
+
+#arrow #arrowFirst {
+	background: #22AADD;
+	border-width: 1.1px;
+	border-style: solid;
+	width: 90%;
+	border-color: #22AADD;
+	position: absolute;
+	top: 50%;
+}
+/* 中间时间 */
+.ui-grid-b>.ui-block-b .inner .dir .time {
+	width: 100%;
+	font-size: 0.6rem;
+	/* font-size: 10vw; */
+	color: #AAAAAA;
+	position: absolute;
+	top: 50%;
+	text-align: center;
+}
+/* 右边向下小箭头*/
+.ui-block-d {
+	position: relative;
+	text-align: center;
+}
+
+.arrow-bottom {
+	position: absolute;
+	top: 50%;
+	font-size: 0;
+	line-height: 0;
+	border-width: 7px;
+	border-color: rgba(0, 0, 0, 0.3);
+	border-bottom-width: 0;
+	border-style: dashed;
+	border-top-style: solid;
+	border-left-color: transparent;
+	border-right-color: transparent;
+}
+/* 前一天后一天当前日期*/
+.beforeDay {
+	width: 35%;
+	height: 40px;
+	float: left;
+	background-color: #22AADD;
+	border-radius: 4px 0px 0px 4px;
+	color: white;
+	line-height: 40px;
+}
+
+.nextDay {
+	width: 35%;
+	height: 40px;
+	float: left;
+	background-color: #22AADD;
+	border-radius: 0px 4px 4px 0px;
+	color: white;
+	line-height: 40px;
+}
+
+.nowDate {
+	width: 30%;
+	height: 40px;
+	float: left;
+	font-size: 0.8rem;
+	line-height: 40px;
+}
+
+.ui-content {
+	padding: 0px;
+	!
+	important;
+}
+
+form {
+	padding: 1em;
+}
+
+label {
+	font-weight: bolder !important;
+}
+
+/* #shifts_date{
+height:3em;
+} */
+</style>
+		<script>
+			function showLoader() {
+				$("body").append("<div id=\"mask\" style=' position: absolute;background:rgba(0,0,0,0.4);width:100%;height:100%;z-index:1000;top:0px;left:0px;'></div>")
+				$.mobile.loading('show', {
+					text : '', //加载器中显示的文字
+					textVisible : false, //是否显示文字
+					theme : 'b', //加载器主题样式a-e
+					textonly : false, //是否只显示文字
+					html : "" //要显示的html内容，如图片等
+				});
+				$(".mask").css("height", $(document).height());
+				$(".mask").css("width", $(document).width());
+				$(".mask").show();
+			}
+			//关闭
+			function hideLoader() {
+				//隐藏加载器
+				$.mobile.loading('hide');
+				$("#mask").remove();
+			}
+
+			$(function() {
+				
+				//loading层
+									$("#centerPart").hide();
+									$(document)
+											.on(
+													'tap',
+													'#shiftsList>.shiftsInfo',
+													function() {
+														var shifts_number = $(
+																this).find(
+																".shiftNumber")
+																.text();
+														var shifts_date = $(
+																"#shiftsDate")
+																.val();
+														window.location.href = "ticketInfomation?shifts_number="
+																+ shifts_number
+																+ "&shifts_date="
+																+ shifts_date;
+													});
+									//前一天点击事件
+									$(".beforeDay")
+											.on(
+													"tap",
+													function() {
+														if ($("#shiftsDate")
+																.val() == "") {
+															alert("请先查询班次！");
+															return;
+														}
+
+														var date = new Date($(
+																"#shiftsDate")
+																.val());
+														date.setDate(date
+																.getDate() - 1);
+														$("#shiftsDate")
+																.attr(
+																		"value",
+																		formatTime(date
+																				.getTime()));
+														$(".nowDate")
+																.text(
+																		formatTime(date
+																				.getTime()));
+														searh(
+																$("#originName")
+																		.val(),
+																$(
+																		"#terminalName")
+																		.val(),
+																formatTime(date
+																		.getTime()));
+													});
+									//后一天点击事件
+									$(".nextDay")
+											.on(
+													"tap",
+													function() {
+														if ($("#shiftsDate")
+																.val() == "") {
+															alert("请先查询班次！");
+															return;
+														}
+
+														var date = new Date($(
+																"#shiftsDate")
+																.val());
+														date.setDate(date
+																.getDate() + 1);
+														$("#shiftsDate")
+																.val(
+																		formatTime(date
+																				.getTime()));
+														$(".nowDate")
+																.text(
+																		formatTime(date
+																				.getTime()));
+														searh(
+																$("#originName")
+																		.val(),
+																$(
+																		"#terminalName")
+																		.val(),
+																formatTime(date
+																		.getTime()));
+													});
+									//查询点击事件
+									$(".btnSearch")
+											.on(
+													"tap",
+													function() {
+
+														if ($("#up_origin_name")
+																.val() == "") {
+															alert("请选择出发地！");
+															return;
+														}
+														if ($(
+																"#up_terminal_name")
+																.val() == "") {
+															alert("请选择目的地！");
+															return;
+														}
+														if ($("#shifts_date")
+																.val() == "") {
+															alert("请选择时间！");
+															return;
+														}
+														$("#centerPart").show();
+														$("body")
+																.animate(
+																		{
+																			scrollTop : $(
+																					"#btnSearch")
+																					.offset().top
+																		}, 500);
+														$("#originName")
+																.val(
+																		$(
+																				"#up_origin_name")
+																				.val());
+														$("#terminalName")
+																.val(
+																		$(
+																				"#up_terminal_name")
+																				.val());
+														$("#shiftsDate")
+																.val(
+																		$(
+																				"#shifts_date")
+																				.val());
+														$(".nowDate")
+																.text(
+																		$(
+																				"#shifts_date")
+																				.val());
+														searh(
+																$(
+																		"#up_origin_name")
+																		.val(),
+																$(
+																		"#up_terminal_name")
+																		.val(),
+																$(
+																		"#shifts_date")
+																		.val());
+													});
+
+									function searh(originName, terminalName,
+											shiftsDate) {
+										showLoader();
+										$
+												.ajax({
+													type : "POST",
+													url : "ShiftsSearch",
+													data : {
+														up_origin_name : originName,
+														up_terminal_name : terminalName,
+														shifts_date : shiftsDate
+													},
+													dataType : "json",
+													success : function(data) {
+														$("#shiftsList")
+																.empty();
+														hideLoader();
+														if (data != null
+																&& data.length > 0) {
+															var arr = JSON.parse(JSON.stringify(data));
+															var contentBody = "";
+															if (arr.length > 0) {
+										                    	$.each(arr, function (index, val) {
+										                    		var date = formatTime(new Date().getTime());
+																	var arrive_time = new Date(date + " " + val.arrive_time);
+																	var depart_time = new Date(date + " " + val.depart_time);
+																	var minute = 0;
+																	if (arrive_time < depart_time) {
+																		arrive_time.setDate(arrive_time.getDate() + 1);
+																	}
+																	minute = (arrive_time - depart_time) / 60000;
+																	contentBody += "<div class='copy' ><div class='ui-grid-b shiftsInfo' onclick="+"info('"+val.shifts_number+"','"+shiftsDate+"','"+val.depart_time+"')"+"><div class='ui-block-c'><div style='font-weight:bolder;'><span>车次</span><span class='shiftNumber' name='shiftNumber'>" + val.shifts_number + "</span></div></div><div class='ui-block-b'><div class='inner'><div class='start'><div class='icon'><img src='../../static/images/2.png'></div><div class='startPlace'>" + val.up_origin_name + "</div><div class='time'>" + val.depart_time + "</div></div><div class='dir'><div id='arrow'><div id='arrowFirst'></div><div id='arrowSecond'></div></div><div class='time'>" + minute + "分钟</div></div><div class='end'><div class='icon'><img src='../../static/images/3.png'></div><div class='startPlace'>" + val.up_terminal_name + "</div><div class='time'>" + val.arrive_time + "</div></div></div></div><div class='ui-block-d'><div class='arrow-bottom'></div></div></div><div style='height:4px;background-color:rgba(0,0,0,0.1);'></div><div class=mask></div></div>";											                    
+										                    	});
+											                    document.getElementById('shiftsList').innerHTML=contentBody;
+										                    }
+															
+														} else {
+															$(".noData")
+																	.find(".p1")
+																	.text(
+																			$(
+																					"#originName")
+																					.val());
+															$(".noData")
+																	.find(".p2")
+																	.text(
+																			$(
+																					"#terminalName")
+																					.val());
+															$("#shiftsList")
+																	.append(
+																			$(
+																					".noData")
+																					.html());
+														}
+													},
+													error : function(e) {
+														hideLoader();
+														console.log(e);
+													}
+												});
+									}
+			});
+			
+			function info(number,date,depart_time){
+				window.location.href = "ticketInfomation?shifts_number=" + number + "&shifts_date=" + date + "&depart_time=" + depart_time;
+				
+			}
+			
+		</script>
+	</head>
+
+	<body>
+		<div data-role="page">
+            <div data-role="header" style="background-color: rgba(0,0,0,0.5);text-shadow: 0 0 0 white;color: white;">
+				
+				<h1>班次查询</h1>
+			</div>
+			<div data-role="content">
+				<form method="post" action="">
+					<input type="hidden" name="originName" id="originName"> <input type="hidden" name="terminalName" id="terminalName">
+					<input type="hidden" name="shiftsDate" id="shiftsDate">
+					<div class="ui-field-contain">
+						<label for="up_origin_name">出发地</label> <select name="up_origin_name" id="up_origin_name" data-icon="carat-r">
+							<option value="">请选择</option>
+							<option th:each="searchOriginName:${searchOriginName}" th:value="${searchOriginName['up_origin_name']}" th:text="${searchOriginName['up_origin_name']}"></option>
+						</select>
+					</div>
+					<div class="ui-field-contain">
+						<label for="up_terminal_name">目的地</label> <select name="up_terminal_name" id="up_terminal_name" data-icon="carat-r">
+							<option value="">请选择</option>
+							<option th:each="searchTerminalName:${searchTerminalName}" th:value="${searchTerminalName['up_terminal_name']}"
+							 th:text="${searchTerminalName['up_terminal_name']}"></option>
+						</select>
+					</div>
+					<div class="ui-field-contain">
+						<label for="tx1">出发时间</label> <input type="date" name="shifts_date" id="shifts_date" data-icon="carat-r" th:value=${nowDate}>
+					</div>
+				</form>
+				<a id="btnSearch" href="javascript:void(0);" data-role="button" style="background-color: #22AADD; color: white; text-shadow: 0 0 0 white;"
+				 class="btnSearch">查询</a>
+				<div style="height: 40px; width: 100%; line-height: 40px; text-align: center;" id="centerPart">
+					<div class="beforeDay">前一天<<</div> <div class="nowDate" th:text=${nowDate}>2020-01-15</div>
+					<div class="nextDay">>>后一天</div>
+				</div>
+				<!--显示数据  -->
+				<div id="shiftsList">
+				      <div><div  style="text-align: center;margin-top: 20px;font-weight: bold;">请选择出发地和目的地后点击查询！</div> 
+				 
+				</div>
+			</div>
+			<div class="noData" style="display:none;"><div  style="text-align: center;margin-top: 20px;">当天无从<span class="p1" style="font-weight: bold;"></span>到<span class="p2" style="font-weight: bold;"></span>的班次信息！</div></div>
+			<div class="copy" style="display:none;">
+				<div class="ui-grid-b shiftsInfo" >
+					<div class="ui-block-c">
+						<div style="font-weight:bolder;"><span>车次</span>
+							<span class="shiftNumber">vcv</span></div>
+					</div>
+					<div class="ui-block-b">
+						<div class=" inner">
+							<div class="start">
+								<div class="icon"><img src="../../static/images/2.png"></div>
+								<div class="startPlace">上海明谷科技园</div>
+								<div class="time">02:00</div>
+							</div>
+							<div class="dir">
+								<div id="arrow">
+									<div id="arrowFirst"></div>
+									<div id="arrowSecond"></div>
+								</div>
+								<div class="time">159分钟</div>
+							</div>
+							<div class="end">
+								<div class="icon"><img src="../../static/images/3.png"></div>
+								<div class="startPlace">北京人民大会堂</div>
+								<div class="time">00:00</div>
+							</div>
+						</div>
+					</div>
+					<div class="ui-block-d">
+						<div class="arrow-bottom"></div>
+					</div>
+				</div>
+				<div style="height:4px;background-color:rgba(0,0,0,0.1);"></div>
+				<div class=mask></div>
+			</div>
+	</body>
+</html>

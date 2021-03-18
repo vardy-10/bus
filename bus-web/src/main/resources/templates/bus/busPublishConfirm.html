@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>北航校车管理系统</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/bus/busOperatePlanShow.js"></script>
+<script src="../../js/common.js"></script>
+<script type="text/javascript "
+	src="../../static/js/jquery-1.9.1.min.js"></script>
+<style type="text/css">
+   #text_info{
+    text-align: center;
+   }
+    #text_info p{
+      margin-top: 30px;
+    }
+    #text_info h2:nth-of-type(1){
+	margin-top: 50px;
+}
+ #text_info p:nth-of-type(1){
+	margin-top: 50px;
+}
+button {
+margin:50px 120px 0px 0px;
+	float: right;
+}
+</style>
+
+</head>
+<body>
+    <div id="text_info">
+          <h2 >说明</h2>
+          <p>运营计划发布后，将作为原始数据，公布到订票系统平台，电子站牌系统平台及其他班车运营查询系统接口；</p>
+          <p>运营计划不能随意修改，需要修改运营车辆和司机数据，请使用运营调度-->调度调整；</p>
+          <p>调整后的数据作为实际运营数据单独存储；并和原计划做对比；形成运营偏差分析。</p>
+    </div>
+	<button type="button" class="layui-btn" id="submit" >确定发布</button>
+	<script th:inline="javascript">
+   $("#submit").click(function(){
+	 //发送ajax请求
+	   var i = layer.load(2);
+		$.ajax({
+			url : 'publishShiftsPlan?shifts_numbers='+[[${shifts_number}]]+'&shifts_dates='+[[${shifts_date}]],
+			dataType : 'json',
+			type : 'post',
+			success : function(data) {
+				layer.close(i);
+				if (!data.success) {
+					layer.msg(data.message, {
+						icon : 2,
+						time : parent.waitTime
+					}, function() {
+					});
+				} else {
+					closelayer();//关闭窗口
+					parent.refreshTable();
+				}
+			},
+			error : function() {	
+				layer.msg('服务器错误请联系管理员', {
+					icon : 2,
+					time : parent.waitTime
+				}, function() {
+					/*location.href = "/manage/show";*/
+				});
+			}
+		});	
+   });
+	
+	</script>
+</body>
+</html>

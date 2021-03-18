@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zah.dao.BusStationDao">
+	<select id="getCountBy" resultType="Integer">
+		SELECT COUNT(station_id) FROM sbus_station WHERE 1=1
+		<if test="columnMap.station_name!=null">AND station_name LIKE
+			CONCAT('%',#{columnMap.station_name},'%')
+		</if>
+		AND line_id=#{columnMap.line_id}
+	</select>
+	<select id="getBusStationList" resultType="com.zah.entity.BusStation">
+		SELECT station_id,station_name,station_dir,station_order,radius FROM
+		sbus_station WHERE line_id=#{columnMap.line_id}
+		<if test="columnMap.station_name!=null">AND station_name LIKE
+			CONCAT('%',#{columnMap.station_name},'%')
+		</if>
+		ORDER BY station_dir asc,station_order asc,station_id asc limit
+		#{offset},#{size}
+	</select>
+	<select id="selectInfoByKey" resultType="com.zah.entity.BusStation"
+		parameterType="String">
+		SELECT ${columns} FROM sbus_station WHERE
+		${key}=#{value}
+	</select>
+	<delete id="deleteBusStation" parameterType="String">
+		DELETE FROM
+		sbus_station
+		WHERE station_id=#{station_id}
+	</delete>
+
+	<delete id="delStationByLineIdandType" parameterType="String">
+		DELETE FROM
+		sbus_station WHERE line_id=#{line_id} and station_dir=2
+	</delete>
+	<select id="getMaxOrder" parameterType="String" resultType="int">
+		SELECT IFNULL(MAX( station_order ),0) AS max_order FROM sbus_station
+		WHERE
+		line_id =#{line_id} AND station_dir =#{station_dir}
+	</select>
+	<insert id="addStation" parameterType="com.zah.entity.BusStation">
+		INSERT INTO
+		sbus_station(line_id,station_dir,station_order,station_name,radius)
+		VALUES
+		(#{columnMap.line_id},#{columnMap.station_dir},#{columnMap.station_order},#{columnMap.station_name},#{columnMap.radius})
+	</insert>
+	<select id="selectInfoByNameAndId" resultType="com.zah.entity.BusStation"
+		parameterType="String">
+		SELECT station_name FROM sbus_station WHERE
+		line_id=#{line_id} and station_name=#{station_name}
+	</select>
+	<select id="selectInfoByLineAndDir" resultType="com.zah.entity.BusStation"
+		parameterType="String">
+		SELECT station_name FROM sbus_station WHERE
+		line_id=#{line_id} and station_dir=#{station_dir} and
+		station_order=#{station_order}
+	</select>
+
+	<update id="deleteUpdateStationInfo" parameterType="String">
+		update
+		sbus_station set
+		station_order = station_order -1
+		where line_id
+		=#{columnMap.line_id} and
+		station_dir =#{columnMap.station_dir}
+		and
+		station_order >=#{columnMap.station_order};
+
+	</update>
+	<update id="addUpdateStationInfo" parameterType="String">
+		update
+		sbus_station set
+		station_order = station_order +1
+		where line_id
+		=#{columnMap.line_id} and
+		station_dir =#{columnMap.station_dir}
+		and
+		station_order >=#{columnMap.station_order};
+	</update>
+	<select id="getFirstLastStationByColumn" parameterType="String"
+		resultType="com.zah.entity.BusStation">
+		SELECT station_name FROM sbus_station where station_order!=0
+		<if test="columnMap.line_id!=null">AND line_id=#{columnMap.line_id}</if>
+		<if test="columnMap.station_order!=null">AND station_order=#{columnMap.station_order}</if>
+		<if test="columnMap.station_dir!=null">AND station_dir=#{columnMap.station_dir}</if>
+	</select>
+	<update id="upOnAdd" parameterType="String">
+		update sbus_station set
+		station_order=station_order+1
+		where line_id=#{BusStation.line_id} and
+		station_dir=#{BusStation.station_dir}
+		and
+		station_order>=#{BusStation.station_order} and
+		station_id!=#{BusStation.station_id};
+	</update>
+
+	<update id="upOnRed" parameterType="String">
+		update sbus_station set
+		station_order = station_order-1
+		where line_id =#{BusStation.line_id}
+		and
+		station_dir =#{BusStation.station_dir}
+		and
+		station_order>#{BusStation.station_order};
+	</update>
+
+	<update id="upStation" parameterType="String">
+		update sbus_station set
+		station_name =#{BusStation.station_name},
+		station_dir
+		=#{BusStation.station_dir},
+		radius =#{BusStation.radius},
+		station_order
+		=#{BusStation.station_order}
+		where
+		station_id =#{BusStation.station_id};
+	</update>
+	<select id="selectInfoByLineAndOrder" resultType="String"
+		parameterType="String">
+		SELECT station_name FROM sbus_station WHERE
+		line_id=#{line_id} and
+		station_order=#{station_order} and station_dir=#{station_dir} and station_id!=#{station_id}
+	</select>
+
+
+
+</mapper>
